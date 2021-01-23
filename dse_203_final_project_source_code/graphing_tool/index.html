@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Neovis.js Simple Example</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <style type="text/css">
+            #viz {
+                /* width: 900px; */
+                /* height: 700px; */
+                min-height: 85vh;
+                height: 85%;
+                border: 1px solid lightgray;
+                font: 22pt arial;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-light bg-light justify-content-between">
+           <a class="navbar-brand">DSE 203 Final</a>    
+            <form class="form-inline">
+                <select id="myselect" class="form-control">
+                    <option value="1">CWE ChildOf Relationships likelihood Low</option>
+                    <option value="2">CWE ChildOf Relationships likelihood Medium</option>
+                    <option value="3">CWE ChildOf Relationships likelihood High</option>
+                    <option value="4">CWE ChildOf Relationships likelihood Unknown</option>
+                    <option value="5">CWE All ChildOf Relationship CWEs</option>
+                    <option value="6">CWE Parents with &gt; 20 Children</option>
+                    <option value="7">CWE Parents with 10 &lt; Children &gt; 20</option>
+                    <option value="8">CWE Parents with &lt; 10 Children</option>
+                    <option value="9">CWE Consequence All</option>
+                    <option value="10">CWE Consequence with &gt; 125 CWEs</option>
+                    <option value="11">CWE Modes of Introduction with &lt; 100 CWEs</option>
+                    <option value="12">CWE Modes of Introduction with &gt; 100 CWEs &lt; 400</option>
+                    <option value="13">CWE Modes of Introduction with &gt; 400 CWEs &lt; 600</option>
+                    <option value="14">CWE Modes of Introduction with &gt; 600 CWEs</option>
+                </select>
+            </form>
+            <button id="stablize" type="button" class="btn btn-secondary">Stablize</button>
+        </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col col-lg-12">
+                <div id="viz"></div>
+            </div>
+        </div>
+    </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+
+        var viz;
+
+        function draw(query) {
+            var config = {
+                container_id: "viz",
+                server_url: "neo4j://localhost:7687",
+                server_user: "neo4j",
+                server_password: "password",
+                arrows: true,
+                // hierarchical: true,
+                labels: {
+                    "cwe": {
+                        caption: "cwe_id",
+                        size: "child_count",
+                        community: "community",
+                    },
+                     "consequence": {
+                        size: "child_count",
+                    }, 
+                    "mode_of_introduction": {
+                        caption: "mode_of_intro_id",
+                        size: "child_count",
+                    }
+
+               },
+                relationships: {
+                    "ChildOf": {
+                        caption: true,
+                        thickness: "count"
+                    },
+                     "causes": {
+                        caption: true,
+                        thickness: "count"
+                    },
+                    "introduced_in": {
+                        caption: true,
+                        thickness: "count"
+                    },
+
+                   //"StartsWith": {
+                    //    "caption": true
+                   // }
+                },
+                initial_cypher: query
+            };
+        
+            viz = new NeoVis.default(config);
+            viz.render();
+        }
+        
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        $( "#myselect" ).change(function () {
+            var opt = $( "#myselect" ).val();
+            query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) WHERE m.community = 1 RETURN *"
+          if (opt == "1") {
+            query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) WHERE m.community = 1 RETURN *"
+            }
+          else if (opt == "2") { 
+            query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) WHERE m.community = 2 RETURN *"
+            }
+          else if (opt == "3") { 
+            query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) WHERE m.community = 3 RETURN *"
+            }
+          else if (opt == "4") {
+            query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) WHERE m.community = 0 RETURN *"
+            }
+         else if (opt == "5") {
+            query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) RETURN *"
+            } 
+         else if (opt == "6") {
+             query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) WHERE m.child_count >= 20 RETURN *"
+            } 
+        else if (opt == "7") {
+             query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) WHERE m.child_count >= 10 AND m.child_count < 20 RETURN *"
+            } 
+        else if (opt == "8") {
+             query = "MATCH (n:cwe)-[r:ChildOf]->(m:cwe) WHERE m.child_count < 10 RETURN *"
+            } 
+        else if (opt == "9") {
+             query = "MATCH (n:cwe)-[r:causes]->(m:consequence) RETURN *"
+            } 
+        else if (opt == "10") {
+            query = "MATCH (n:cwe)-[r:causes]->(m:consequence) WHERE m.child_count >= 125 RETURN *"
+            } 
+        else if (opt == "11") {
+            query = "MATCH (n:cwe)-[r:introduced_in]->(m:mode_of_introduction) WHERE m.child_count < 100 RETURN *"
+            }         
+        else if (opt == "12") {
+            query = "MATCH (n:cwe)-[r:introduced_in]->(m:mode_of_introduction) WHERE m.child_count >= 100 AND m.child_count < 400 RETURN *"
+            } 
+        else if (opt == "13") {
+            query = "MATCH (n:cwe)-[r:introduced_in]->(m:mode_of_introduction) WHERE m.child_count >= 400 AND m.child_count < 600 RETURN *"
+            } 
+       else if (opt == "14") {
+            query = "MATCH (n:cwe)-[r:introduced_in]->(m:mode_of_introduction) WHERE m.child_count >= 600 RETURN *"
+            } 
+
+        draw(query);
+            console.log(opt);
+        }).change();
+      $("#stablize").click(function() {
+          console.log("Stablizing");
+        viz.stabilize();
+      });
+    });
+        
+        
+    </script>
+
+    </body>    
+</html>

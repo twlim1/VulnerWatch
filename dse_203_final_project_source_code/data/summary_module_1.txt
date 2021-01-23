@@ -1,0 +1,18 @@
+Structural Heterogeneity
+Semantic Heterogeneity
+Functional dependency
+Inclusion dependency
+Non-equijoin
+Phonetic variations
+Typographical mistakes
+Contextual differences
+Reordered terms
+Prefixes and suffixes
+Abbreviations, nicknames, and initials
+Cross-language semantics
+Transliteration differencesTruncated letters and missing or extra spaces
+Taxonomic differences
+
+Syntactic (Lexical) differences
+Phonetic differences
+Semantic differences
