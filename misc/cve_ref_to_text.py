@@ -5,13 +5,19 @@ import json
 import argparse
 import requests
 import xmltodict
+import logging
+import getopt
 
+from tqdm import tqdm
 from time   import sleep
 from pprint import pprint
 from abc    import ABC, abstractmethod
 from bs4    import BeautifulSoup as BS
 
+logging.basicConfig(level=logging.INFO)
+
 data_dir = 'data'
+output_dir = 'output'
 
 input_xml = os.path.join(data_dir, 'allitems.xml')
 input_json = os.path.join(data_dir, 'someitems.json')
@@ -23,6 +29,7 @@ files_created = {}
 # This code should only run the first time the script runs. Takes a few seconds.
 #
 if not os.path.exists(input_json): # create it if needed
+    logging.info("Converting XML to JSON")
     with open(input_xml, 'rb') as f:
         data = xmltodict.parse(f)
 
@@ -121,14 +128,20 @@ def printUrl(ref):
 #
 # Main
 #
-if __name__ == '__main__':
 
+if __name__ == '__main__':
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
     with open(input_json) as f:
         data = json.load(f)
-
+    
+    counter = 0
+    LIMIT = 100
     successes = 0
 
-    for datum in data:
+    logging.info("Getting Content ...")
+    for datum in tqdm(data):
         # Skip CVEs without references
         if 'refs' not in datum or not datum['refs']:
             continue
@@ -156,11 +169,12 @@ if __name__ == '__main__':
                 continue # suppress and ignore all errors for now
 
             # Output extracted text to file
-            fname = os.path.join(data_dir, f'{datum["@name"]}_{refnum}.txt')
+            fname = os.path.join(output_dir , f'{datum["@name"]}_{refnum}.txt')
             with open(fname, 'w') as f:
                 f.write(datum['@name'] + '\n')
                 f.write(ref['@url'] + '\n')
                 f.write(obj.text)
+                counter += 1
 
             try:
                 files_created[try_url] += 1
@@ -172,4 +186,9 @@ if __name__ == '__main__':
                 pprint(files_created)
                 sys.exit(0)
 
+            if counter== LIMIT:
+                logging.info(f"{counter} url parsed")
+                sys.exit(0)
             sleep(.2)
+            
+
