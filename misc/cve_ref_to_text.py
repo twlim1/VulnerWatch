@@ -82,6 +82,35 @@ class Cisco(Scraper):
     def extract(self):
         self.text = self.soup.find('div', {'id': 'advisorycontentbody'}).text
 
+class Github(Scraper):
+    def __init__(self, url):
+        if 'gist.github.com' in url:
+            self.extract_fn = self.extract_gist
+        elif url.endswith('.md'):
+            self.extract_fn = self.extract_md
+        elif '/commit/' in url:
+            self.extract_fn = self.extract_commit
+        else:
+            raise ValueError('unsupported url')
+
+        super().__init__(url)
+
+    def extract(self):
+        self.extract_fn()
+        if not self.text:
+            # no reason to continue further
+            raise RuntimeError('Github text data is empty')
+
+    def extract_gist(self):
+        self.text = '\n'.join([i.text for i in self.soup.find_all('div', {'class': 'gist-content'})])
+
+    def extract_md(self):
+        self.text = self.soup.find('div', {'id': 'readme'}).text
+
+    def extract_commit(self):
+        # not all commits have this description, errors are expected
+        self.text = '\n'.join([i.text for i in self.soup.find_all('div', {'class': 'commit-desc'})])
+
 #
 # Map URLs to objects
 #
@@ -90,6 +119,7 @@ mapping = {
     'lists.fedora':     Fedora,
     'usn.ubuntu':       Ubuntu,
     'tools.cisco':      Cisco,
+    'github.com':       Github,
 }
 
 #
@@ -157,7 +187,10 @@ if __name__ == '__main__':
             # Try every url we know how to handle
             for try_url, OBJ in mapping.items():
                 if try_url in ref['@url']:
-                    obj = OBJ(ref['@url'])
+                    try:
+                        obj = OBJ(ref['@url'])
+                    except ValueError:
+                        continue # cheesy way to force the "else: -> continue below"
                     break
             else:
                 # We don't know how to handle urls that end up here
