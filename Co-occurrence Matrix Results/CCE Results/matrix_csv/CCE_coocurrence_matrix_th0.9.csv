@@ -1,0 +1,16 @@
+,internet explorer,net framework,microsoft exchange,remote desktop,trusted platform module,dialog box,active directory,domain controller,visual basic,windows messenger,address book,windows update,lan manager,plain text,windows vista
+internet explorer,94,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+net framework,0,68,0,0,0,0,0,0,0,0,0,0,0,0,0
+microsoft exchange,0,0,54,0,0,0,2,0,0,0,1,0,0,0,0
+remote desktop,0,0,0,45,0,0,0,0,0,0,0,0,0,0,0
+trusted platform module,0,0,0,0,28,0,0,0,0,0,0,0,0,0,0
+dialog box,0,0,0,0,0,26,0,0,0,0,0,0,0,0,0
+active directory,0,0,2,0,0,0,22,1,0,0,0,0,0,0,0
+domain controller,0,0,0,0,0,0,1,20,0,0,0,0,0,0,0
+visual basic,0,0,0,0,0,0,0,0,17,0,0,0,0,0,0
+windows messenger,0,0,0,0,0,0,0,0,0,15,0,0,0,0,0
+address book,0,0,1,0,0,0,0,0,0,0,14,0,0,0,0
+windows update,0,0,0,0,0,0,0,0,0,0,0,14,0,0,0
+lan manager,0,0,0,0,0,0,0,0,0,0,0,0,13,0,0
+plain text,0,0,0,0,0,0,0,0,0,0,0,0,0,11,0
+windows vista,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10

@@ -1,0 +1,3268 @@
+{
+   "schema": {
+      "import": {
+         "_namespace": "http://www.w3.org/1999/xhtml",
+         "_schemaLocation": "http://www.w3.org/2002/08/xhtml/xhtml1-strict.xsd"
+      },
+      "annotation": {
+         "documentation": [
+            {
+               "__text": "The CWE Schema is maintained by The MITRE Corporation and developed in partnership with the public CWE Community. For more information, including how to get involved in the project and how to submit change requests, please visit the CWE website at https://cwe.mitre.org."
+            }
+         ],
+         "appinfo": {
+            "schema": "Core Definition",
+            "version": "6.3",
+            "date": "25 June 2020",
+            "terms_of_use": "Copyright (c) 2006-2020, The MITRE Corporation. All rights reserved. The contents of this file are subject to the terms of the CWE License located at https://cwe.mitre.org/about/termsofuse.html. See the CWE License for the specific language governing permissions and limitations for use of this schema. When distributing copies of the CWE Schema, this license header must be included."
+         }
+      },
+      "element": [
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The Weakness_Catalog root element is used to describe a collection of security issues known as weaknesses (e.g., flaws, faults, bugs). Each catalog can be organized by optional Views and Categories. The catalog also contains a list of all External_References that may be shared throughout the individual weaknesses. The required Name and Version attributes are used to uniquely identify the catalog. The required Date attribute identifies the date when this catalog was created or last updated."
+                  }
+               ]
+            },
+            "complexType": [
+               {
+                  "sequence": {
+                     "element": [
+                        {
+                           "complexType": [
+                              {
+                                 "sequence": {
+                                    "element": [
+                                       {
+                                          "_name": "Weakness",
+                                          "_type": "cwe:WeaknessType",
+                                          "_minOccurs": "1",
+                                          "_maxOccurs": "unbounded"
+                                       }
+                                    ]
+                                 }
+                              }
+                           ],
+                           "_name": "Weaknesses",
+                           "_minOccurs": "0",
+                           "_maxOccurs": "1"
+                        },
+                        {
+                           "complexType": [
+                              {
+                                 "sequence": {
+                                    "element": [
+                                       {
+                                          "_name": "Category",
+                                          "_type": "cwe:CategoryType",
+                                          "_minOccurs": "1",
+                                          "_maxOccurs": "unbounded"
+                                       }
+                                    ]
+                                 }
+                              }
+                           ],
+                           "_name": "Categories",
+                           "_minOccurs": "0",
+                           "_maxOccurs": "1"
+                        },
+                        {
+                           "complexType": [
+                              {
+                                 "sequence": {
+                                    "element": [
+                                       {
+                                          "_name": "View",
+                                          "_type": "cwe:ViewType",
+                                          "_minOccurs": "1",
+                                          "_maxOccurs": "unbounded"
+                                       }
+                                    ]
+                                 }
+                              }
+                           ],
+                           "_name": "Views",
+                           "_minOccurs": "0",
+                           "_maxOccurs": "1"
+                        },
+                        {
+                           "complexType": [
+                              {
+                                 "sequence": {
+                                    "element": [
+                                       {
+                                          "_name": "External_Reference",
+                                          "_type": "cwe:ExternalReferenceType",
+                                          "_minOccurs": "1",
+                                          "_maxOccurs": "unbounded"
+                                       }
+                                    ]
+                                 }
+                              }
+                           ],
+                           "_name": "External_References",
+                           "_minOccurs": "0",
+                           "_maxOccurs": "1"
+                        }
+                     ]
+                  },
+                  "attribute": [
+                     {
+                        "_name": "Name",
+                        "_type": "xs:string",
+                        "_use": "required"
+                     },
+                     {
+                        "_name": "Version",
+                        "_type": "xs:string",
+                        "_use": "required"
+                     },
+                     {
+                        "_name": "Date",
+                        "_type": "xs:date",
+                        "_use": "required"
+                     }
+                  ]
+               }
+            ],
+            "unique": [
+               {
+                  "selector": {
+                     "_xpath": "./cwe:Weakneses/cwe:Weakness"
+                  },
+                  "field": {
+                     "_xpath": "@ID"
+                  },
+                  "_name": "uniqueWeaknessID"
+               },
+               {
+                  "selector": {
+                     "_xpath": "./cwe:Categories/cwe:Category"
+                  },
+                  "field": {
+                     "_xpath": "@ID"
+                  },
+                  "_name": "uniqueCategoryID"
+               },
+               {
+                  "selector": {
+                     "_xpath": "./cwe:Views/cwe:View"
+                  },
+                  "field": {
+                     "_xpath": "@ID"
+                  },
+                  "_name": "uniqueViewID"
+               },
+               {
+                  "selector": {
+                     "_xpath": "./cwe:External_References/cwe:External_Reference"
+                  },
+                  "field": {
+                     "_xpath": "@Reference_ID"
+                  },
+                  "_name": "uniqueReferenceID"
+               }
+            ],
+            "_name": "Weakness_Catalog"
+         }
+      ],
+      "complexType": [
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "A weakness is a mistake or condition that, if left unaddressed, could under the proper conditions contribute to a cyber-enabled capability being vulnerable to attack, allowing an adversary to make items function in unintended ways. This complexType is used to describe a specific type of weakness and provide a variety of information related to it."
+                  },
+                  {
+                     "__text": "The required Description should be short and limited to the key points that define this weakness. The optional Extended_Description element provides a place for additional details important to this weakness, but that are not necessary to convey the fundamental concept behind the weakness. A number of other optional elements are available, each of which is described in more detail within the corresponding complexType that it references."
+                  },
+                  {
+                     "__text": "The required ID attribute provides a unique identifier for the entry. It is considered static for the lifetime of the entry. If this entry becomes deprecated, the identifier will not be reused. The required Name attribute is a string that identifies the entry. The name should focus on the weakness being described and should avoid mentioning the attack that exploits the weakness or the consequences of exploiting the weakness. All words in the entry name should be capitalized except for articles and prepositions, unless they begin or end the name. Subsequent words in a hyphenated chain are also not capitalized. The required Abstraction attribute defines the abstraction level for this weakness. The required Structure attribute defines the structural nature of the weakness. The required Status attribute defines the maturity of the information for this weakness."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "_name": "Description",
+                     "_type": "xs:string",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Extended_Description",
+                     "_type": "cwe:StructuredTextType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Related_Weaknesses",
+                     "_type": "cwe:RelatedWeaknessesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Weakness_Ordinalities",
+                     "_type": "cwe:WeaknessOrdinalitiesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Applicable_Platforms",
+                     "_type": "cwe:ApplicablePlatformsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Background_Details",
+                     "_type": "cwe:BackgroundDetailsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Alternate_Terms",
+                     "_type": "cwe:AlternateTermsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Modes_Of_Introduction",
+                     "_type": "cwe:ModesOfIntroductionType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Exploitation_Factors",
+                     "_type": "cwe:ExploitationFactorsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Likelihood_Of_Exploit",
+                     "_type": "cwe:LikelihoodEnumeration",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Common_Consequences",
+                     "_type": "cwe:CommonConsequencesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Detection_Methods",
+                     "_type": "cwe:DetectionMethodsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Potential_Mitigations",
+                     "_type": "cwe:PotentialMitigationsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Demonstrative_Examples",
+                     "_type": "cwe:DemonstrativeExamplesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Observed_Examples",
+                     "_type": "cwe:ObservedExampleType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Functional_Areas",
+                     "_type": "cwe:FunctionalAreasType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Affected_Resources",
+                     "_type": "cwe:AffectedResourcesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Taxonomy_Mappings",
+                     "_type": "cwe:TaxonomyMappingsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Related_Attack_Patterns",
+                     "_type": "cwe:RelatedAttackPatternsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "References",
+                     "_type": "cwe:ReferencesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Notes",
+                     "_type": "cwe:NotesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Content_History",
+                     "_type": "cwe:ContentHistoryType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  }
+               ]
+            },
+            "attribute": [
+               {
+                  "_name": "ID",
+                  "_type": "xs:integer",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Name",
+                  "_type": "xs:string",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Abstraction",
+                  "_type": "cwe:AbstractionEnumeration",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Structure",
+                  "_type": "cwe:StructureEnumeration",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Status",
+                  "_type": "cwe:StatusEnumeration",
+                  "_use": "required"
+               }
+            ],
+            "_name": "WeaknessType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "A category is a collection of weaknesses based on some common characteristic or attribute. The shared attribute may be any number of things including, but not limited to, environment (J2EE, .NET), functional area (authentication, cryptography) and the relevant resource (credentials management, certificate issues). A Category is used primarily as an organizational mechanism for CWE and should not be mapped to by external sources."
+                  },
+                  {
+                     "__text": "The required Summary element contains the key points that define the category and helps the user understand what the category is attempting to be. The optional Relationships element is used to define relationships (MemberOf and HasMember) with other weaknesses, categories, and views. The optional Taxonomy_Mappings element is used to relate this category to similar categories in taxomomies outside of CWE. The optional References element is used to provide further reading and insight into this category. This element should be used when the category is based on external sources or projects. The optional Notes element is used to provide additional comments or clarifications that cannot be captured using the other elements of the category. The optional Content_History element is used to keep track of the original author of the category and any subsequent modifications to the content. This provides a means of contacting the authors and modifiers for clarifying ambiguities, or in merging overlapping contributions."
+                  },
+                  {
+                     "__text": "The required ID attribute provides a unique identifier for the category. It is meant to be static for the lifetime of the category. If the category becomes deprecated, the ID should not be reused, and a placeholder for the deprecated category should be left in the catalog. The required Name attribute provides a descriptive title used to give the reader an idea of what characteristics this category represents. All words in the name should be capitalized except for articles and prepositions unless they begin or end the name. The required Status attribute defines the maturity of the information for this category. Please refer to the StatusEnumeration simple type for a list of valid values and their meanings."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "_name": "Summary",
+                     "_type": "cwe:StructuredTextType",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Relationships",
+                     "_type": "cwe:RelationshipsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Taxonomy_Mappings",
+                     "_type": "cwe:TaxonomyMappingsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "References",
+                     "_type": "cwe:ReferencesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Notes",
+                     "_type": "cwe:NotesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Content_History",
+                     "_type": "cwe:ContentHistoryType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  }
+               ]
+            },
+            "attribute": [
+               {
+                  "_name": "ID",
+                  "_type": "xs:integer",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Name",
+                  "_type": "xs:string",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Status",
+                  "_type": "cwe:StatusEnumeration",
+                  "_use": "required"
+               }
+            ],
+            "_name": "CategoryType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "A view represents a perspective with which one might look at the weaknesses in the catalog. There are three different types of views as defined by the type attribute: graphs, explicit slices, and implicit slices. The members of a view are either defined externally through the members element (in the case of a graph or an explicit slice) or by the optional filter element (in the case of an implicit slice)."
+                  },
+                  {
+                     "__text": "The required Objective element describes the perspective from which the view has been constructed. The optional Audience element provides a reference to the target stakeholders or groups for whom the view is most relevant. The optional Members element is used to define MemberOf relationships with categories. The optional Filter element is only used for implicit slices (see the Type attribute) and holds an XSL query for identifying which entries are members of the view. The optional References element is used to provide further reading and insight into this view. This element should be used when the view is based on external sources or projects. The optional Notes element is used to provide any additional comments that cannot be captured using the other elements of the view. The optional Content_History element is used to keep track of the original author of the view and any subsequent modifications to the content. This provides a means of contacting the authors and modifiers for clarifying ambiguities, or in merging overlapping contributions."
+                  },
+                  {
+                     "__text": "The required ID attribute provides a unique identifier for the view. It is meant to be static for the lifetime of the view. If the view becomes deprecated, the ID should not be reused, and a placeholder for the deprecated view should be left in the catalog. The required Name attribute provides a descriptive title used to give the reader an idea of what perspective this view represents. All words in the name should be capitalized except for articles and prepositions, unless they begin or end the name. The required Type attribute describes how this view is being constructed. Please refer to the ViewTypeEnumeration simple type for a list of valid values and their meanings. The required Status attribute defines the maturity of the information for this view. Please refer to the StatusEnumeration simple type for a list of valid values and their meanings."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "_name": "Objective",
+                     "_type": "cwe:StructuredTextType",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Audience",
+                     "_type": "cwe:AudienceType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Members",
+                     "_type": "cwe:RelationshipsType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Filter",
+                     "_type": "xs:string",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "References",
+                     "_type": "cwe:ReferencesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Notes",
+                     "_type": "cwe:NotesType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Content_History",
+                     "_type": "cwe:ContentHistoryType",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  }
+               ]
+            },
+            "attribute": [
+               {
+                  "_name": "ID",
+                  "_type": "xs:integer",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Name",
+                  "_type": "xs:string",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Type",
+                  "_type": "cwe:ViewTypeEnumeration",
+                  "_use": "required"
+               },
+               {
+                  "_name": "Status",
+                  "_type": "cwe:StatusEnumeration",
+                  "_use": "required"
+               }
+            ],
+            "_name": "ViewType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ExternalReferenceType complex type defines a collection of elements that provide a pointer to where more information and deeper insight can be obtained. Examples would be a research paper or an excerpt from a publication."
+                  },
+                  {
+                     "__text": "Not all of the elements need to be used, since some are designed for web references and others are designed for book references. The Author and Title elements should be filled out for all references if possible; Author is optional, but Title is required. The optional Edition element identifies the edition of the material being referenced in the event that multiple editions of the material exist. If the reference is part of a magazine or journal, the Publication element should be used to identify the name. The optional Publication_Year, Publication_Month, Publication_Day, and Publisher elements should be used to more specifically identify the book or publication via its date and publisher. The year must follow the YYYY format while the month must follow the --MM format and the day must follow the ---DD format. The URL and URL_Date elements are used to capture a URL for the material being referenced, if one exists, and the date when the URL was validated to exist."
+                  },
+                  {
+                     "__text": "The required Reference_ID attribute exists to provide a globally unique identifier for the reference (e.g., REF-1). The ID is used by other entities to link to this external reference."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "_name": "Author",
+                     "_type": "xs:string",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "unbounded"
+                  },
+                  {
+                     "_name": "Title",
+                     "_type": "xs:string",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Edition",
+                     "_type": "xs:string",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Publication",
+                     "_type": "xs:string",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Publication_Year",
+                     "_type": "xs:gYear",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Publication_Month",
+                     "_type": "xs:gMonth",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Publication_Day",
+                     "_type": "xs:gDay",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "Publisher",
+                     "_type": "xs:string",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "URL",
+                     "_type": "xs:anyURI",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  },
+                  {
+                     "_name": "URL_Date",
+                     "_type": "xs:date",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "1"
+                  }
+               ]
+            },
+            "attribute": [
+               {
+                  "_name": "Reference_ID",
+                  "_type": "xs:string",
+                  "_use": "required"
+               }
+            ],
+            "_name": "ExternalReferenceType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The AffectedResourcesType complex type is used to identify system resources that can be affected by an exploit of this weakness. If multiple resources could be affected, then each should be defined by its own Affected_Resource element."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "_name": "Affected_Resource",
+                     "_type": "cwe:ResourceEnumeration",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "AffectedResourcesType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The AlternateTermsType complex type indicates one or more other names used to describe this weakness. The required Term element contains the actual alternate term. The required Description element provides context for each alternate term by which this weakness may be known."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Term",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Description",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           }
+                        }
+                     ],
+                     "_name": "Alternate_Term",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "AlternateTermsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ApplicablePlatformsType complex type specifies the languages, operating systems, architectures, and technologies in which a given weakness could appear. A technology represents a generally accepted feature of a system and often refers to a high-level functional component within a system. The required Prevalence attribute identifies the regularity with which the weakness is applicable to that platform. When providing an operating system name, an optional Common Platform Enumeration (CPE) identifier can be used to a identify a specific OS."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "attribute": [
+                              {
+                                 "_name": "Name",
+                                 "_type": "cwe:LanguageNameEnumeration"
+                              },
+                              {
+                                 "_name": "Class",
+                                 "_type": "cwe:LanguageClassEnumeration"
+                              },
+                              {
+                                 "_name": "Prevalence",
+                                 "_type": "cwe:PrevalenceEnumeration",
+                                 "_use": "required"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Language",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "unbounded"
+                  },
+                  {
+                     "complexType": [
+                        {
+                           "attribute": [
+                              {
+                                 "_name": "Name",
+                                 "_type": "cwe:OperatingSystemNameEnumeration"
+                              },
+                              {
+                                 "_name": "Version",
+                                 "_type": "xs:string"
+                              },
+                              {
+                                 "_name": "CPE_ID",
+                                 "_type": "xs:string"
+                              },
+                              {
+                                 "_name": "Class",
+                                 "_type": "cwe:OperatingSystemClassEnumeration"
+                              },
+                              {
+                                 "_name": "Prevalence",
+                                 "_type": "cwe:PrevalenceEnumeration",
+                                 "_use": "required"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Operating_System",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "unbounded"
+                  },
+                  {
+                     "complexType": [
+                        {
+                           "attribute": [
+                              {
+                                 "_name": "Name",
+                                 "_type": "cwe:ArchitectureNameEnumeration"
+                              },
+                              {
+                                 "_name": "Class",
+                                 "_type": "cwe:ArchitectureClassEnumeration"
+                              },
+                              {
+                                 "_name": "Prevalence",
+                                 "_type": "cwe:PrevalenceEnumeration",
+                                 "_use": "required"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Architecture",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "unbounded"
+                  },
+                  {
+                     "complexType": [
+                        {
+                           "attribute": [
+                              {
+                                 "_name": "Name",
+                                 "_type": "cwe:TechnologyNameEnumeration"
+                              },
+                              {
+                                 "_name": "Class",
+                                 "_type": "cwe:TechnologyClassEnumeration"
+                              },
+                              {
+                                 "_name": "Prevalence",
+                                 "_type": "cwe:PrevalenceEnumeration",
+                                 "_use": "required"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Technology",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "ApplicablePlatformsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The AudienceType complex type provides a reference to the target stakeholders or groups for a view. For each stakeholder, the required Type element specifies the type of members that might be interested in the view. The required Description element provides some text describing what properties of the view this particular stakeholder might find useful."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Type",
+                                    "_type": "cwe:StakeholderEnumeration",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Description",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           }
+                        }
+                     ],
+                     "_name": "Stakeholder",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "AudienceType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The BackgroundDetailsType complex type contains one or more Background_Detail elements, each of which contains information that is relevant but not related to the nature of the weakness itself."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "_name": "Background_Detail",
+                     "_type": "cwe:StructuredTextType",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "BackgroundDetailsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The CommonConsequencesType complex type is used to specify individual consequences associated with a weakness. The required Scope element identifies the security property that is violated. The optional Impact element describes the technical impact that arises if an adversary succeeds in exploiting this weakness. The optional Likelihood element identifies how likely the specific consequence is expected to be seen relative to the other consequences. For example, there may be high likelihood that a weakness will be exploited to achieve a certain impact, but a low likelihood that it will be exploited to achieve a different impact. The optional Note element provides additional commentary about a consequence."
+                  },
+                  {
+                     "__text": "The optional Consequence_ID attribute is used by the internal CWE team to uniquely identify examples that are repeated across any number of individual weaknesses. To help make sure that the details of these common examples stay synchronized, the Consequence_ID is used to quickly identify those examples across CWE that should be identical. The identifier is a string and should match the following format: CC-1."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Scope",
+                                    "_type": "cwe:ScopeEnumeration",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "unbounded"
+                                 },
+                                 {
+                                    "_name": "Impact",
+                                    "_type": "cwe:TechnicalImpactEnumeration",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "unbounded"
+                                 },
+                                 {
+                                    "_name": "Likelihood",
+                                    "_type": "cwe:LikelihoodEnumeration",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Note",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           },
+                           "attribute": [
+                              {
+                                 "_name": "Consequence_ID",
+                                 "_type": "xs:string"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Consequence",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "CommonConsequencesType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ContentHistoryType complex type provides elements to keep track of the original author of an entry and any subsequent modifications to the content. The required Submission element is used to identify the submitter and/or their organization, the date, and any optional comments related to an entry. The optional Modification element is used to identify a modifier's name, organization, the date, and any related comments. A new Modification element should exist for each change made to the content. Modifications that change the meaning of the entry, or how it might be interpreted, should be marked with an importance of critical to bring it to the attention of anyone previously dependent on the weakness. The optional Contribution element is used to identify a contributor's name, organization, the date, and any related comments. This element has a single Type attribute, which indicates whether the contribution was part of general feedback given or actual content that was donated. The optional Previous_Entry_Name element is used to describe a previous name that was used for the entry. This should be filled out whenever a substantive name change occurs. The required Date attribute lists the date on which this name change was made. A Previous_Entry_Name element should align with a corresponding Modification element."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "choice": {
+                                 "sequence": {
+                                    "element": [
+                                       {
+                                          "_name": "Submission_Name",
+                                          "_type": "xs:string",
+                                          "_minOccurs": "1"
+                                       },
+                                       {
+                                          "_name": "Submission_Organization",
+                                          "_type": "xs:string",
+                                          "_minOccurs": "0"
+                                       }
+                                    ]
+                                 },
+                                 "element": [
+                                    {
+                                       "_name": "Submission_Organization",
+                                       "_type": "xs:string",
+                                       "_minOccurs": "1"
+                                    }
+                                 ]
+                              },
+                              "element": [
+                                 {
+                                    "_name": "Submission_Date",
+                                    "_type": "xs:date"
+                                 },
+                                 {
+                                    "_name": "Submission_Comment",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           }
+                        }
+                     ],
+                     "_name": "Submission"
+                  },
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Modification_Name",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Modification_Organization",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Modification_Date",
+                                    "_type": "xs:date",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Modification_Importance",
+                                    "_type": "cwe:ImportanceEnumeration",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Modification_Comment",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           }
+                        }
+                     ],
+                     "_name": "Modification",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "unbounded"
+                  },
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Contribution_Name",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Contribution_Organization",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Contribution_Date",
+                                    "_type": "xs:date",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Contribution_Comment",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           },
+                           "attribute": [
+                              {
+                                 "simpleType": [
+                                    {
+                                       "restriction": {
+                                          "enumeration": [
+                                             {
+                                                "_value": "Content"
+                                             },
+                                             {
+                                                "_value": "Feedback"
+                                             }
+                                          ],
+                                          "_base": "xs:string"
+                                       }
+                                    }
+                                 ],
+                                 "_name": "Type",
+                                 "_use": "required"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Contribution",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "unbounded"
+                  },
+                  {
+                     "complexType": [
+                        {
+                           "simpleContent": {
+                              "extension": {
+                                 "attribute": [
+                                    {
+                                       "_name": "Date",
+                                       "_type": "xs:date",
+                                       "_use": "required"
+                                    }
+                                 ],
+                                 "_base": "xs:string"
+                              }
+                           }
+                        }
+                     ],
+                     "_name": "Previous_Entry_Name",
+                     "_minOccurs": "0",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "ContentHistoryType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The DemonstrativeExamplesType complex type contains one or more Demonstrative_Example elements, each of which contains an example illustrating how a weakness may look in actual code. The optional Title_Text element provides a title for the example. The Intro_Text element describes the context and setting in which this code should be viewed, summarizing what the code is attempting to do. The Body_Text and Example_Code elements are a mixture of code and explanatory text about the example. The References element provides additional information."
+                  },
+                  {
+                     "__text": "The optional Demonstrative_Example_ID attribute is used by the internal CWE team to uniquely identify examples that are repeated across any number of individual weaknesses. To help make sure that the details of these common examples stay synchronized, the Demonstrative_Example_ID is used to quickly identify those examples across CWE that should be identical. The identifier is a string and should match the following format: DX-1."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Title_Text",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Intro_Text",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "References",
+                                    "_type": "cwe:ReferencesType",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ],
+                              "choice": {
+                                 "element": [
+                                    {
+                                       "_name": "Body_Text",
+                                       "_type": "cwe:StructuredTextType"
+                                    },
+                                    {
+                                       "_name": "Example_Code",
+                                       "_type": "cwe:StructuredCodeType"
+                                    }
+                                 ],
+                                 "_minOccurs": "0",
+                                 "_maxOccurs": "unbounded"
+                              }
+                           },
+                           "attribute": [
+                              {
+                                 "_name": "Demonstrative_Example_ID",
+                                 "_type": "xs:string"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Demonstrative_Example",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "DemonstrativeExamplesType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The DetectionMethodsType complex type is used to identify methods that may be employed to detect this weakness, including their strengths and limitations. The required Method element identifies the particular detection method being described. The required Description element is intended to provide some context of how this method can be applied to a specific weakness. The optional Effectiveness element says how effective the detection method may be in detecting the associated weakness. This assumes the use of best-of-breed tools, analysts, and methods. There is limited consideration for financial costs, labor, or time. The optional Effectiveness_Notes element provides additional discussion of the strengths and shortcomings of this detection method."
+                  },
+                  {
+                     "__text": "The optional Detection_Method_ID attribute is used by the internal CWE team to uniquely identify methods that are repeated across any number of individual weaknesses. To help make sure that the details of these common methods stay synchronized, the Detection_Method_ID is used to quickly identify those Detection_Method elements across CWE that should be identical. The identifier is a string and should match the following format: DM-1."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Method",
+                                    "_type": "cwe:DetectionMethodEnumeration",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Description",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Effectiveness",
+                                    "_type": "cwe:DetectionEffectivenessEnumeration",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Effectiveness_Notes",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           },
+                           "attribute": [
+                              {
+                                 "_name": "Detection_Method_ID",
+                                 "_type": "xs:string"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Detection_Method",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "DetectionMethodsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ExploitationFactorsType complex type points out conditions or factors that could increase the likelihood of exploit for this weakness."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "_name": "Exploitation_Factor",
+                     "_type": "cwe:StructuredTextType",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "ExploitationFactorsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The FunctionalAreasType complex type contains one or more functional_area elements, each of which identifies the functional area in which the weakness is most likely to occur. For example, CWE-23: Relative Path Traversal may occur in functional areas of software related to file processing. Each applicable functional area should have a new Functional_Area element, and standard title capitalization should be applied to each area."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "_name": "Functional_Area",
+                     "_type": "cwe:FunctionalAreaEnumeration",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "FunctionalAreasType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The MemberType complex type may be used to establish a Has_Member or MemberOf type relationship within the designated View_ID. This type will establish a relationship between the container Category/View ID and the target CWE_ID."
+                  }
+               ]
+            },
+            "attribute": [
+               {
+                  "_name": "CWE_ID",
+                  "_type": "xs:integer",
+                  "_use": "required"
+               },
+               {
+                  "_name": "View_ID",
+                  "_type": "xs:integer",
+                  "_use": "required"
+               }
+            ],
+            "_name": "MemberType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ModeOfIntroductionType complex type is used to provide information about how and when a given weakness may be introduced. If there are multiple possible introduction points, then a separate Introduction element should be included for each. The required Phase element identifies the point in the product life cycle at which the weakness may be introduced. The optional Note element identifies the typical scenarios under which the weakness may be introduced during the given phase."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Phase",
+                                    "_type": "cwe:PhaseEnumeration",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Note",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           }
+                        }
+                     ],
+                     "_name": "Introduction",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "ModesOfIntroductionType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The NotesType complex type contains one or more Note elements, each of which is used to provide any additional comments about an entry that cannot be captured using other elements."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "complexContent": {
+                              "extension": {
+                                 "attribute": [
+                                    {
+                                       "_name": "Type",
+                                       "_type": "cwe:NoteTypeEnumeration",
+                                       "_use": "required"
+                                    }
+                                 ],
+                                 "_base": "cwe:StructuredTextType"
+                              }
+                           }
+                        }
+                     ],
+                     "_name": "Note",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "NotesType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ObservedExampleType complex type specifies references to a specific observed instance of a weakness in real-world products. Typically this will be a CVE reference. Each Observed_Example element represents a single example. The optional Reference element should contain the identifier for the example being cited. For example, if a CVE is being cited, it should be of the standard CVE identifier format, such as CVE-2005-1951 or CVE-1999-0046. The required Description element should contain a product-independent description of the example being cited. The description should present an unambiguous correlation between the example being described and the weakness that it is meant to exemplify. It should also be short and easy to understand. The Link element should provide a valid URL where more information regarding this example can be obtained."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Reference",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Description",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Link",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           }
+                        }
+                     ],
+                     "_name": "Observed_Example",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "ObservedExampleType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The PotentialMitigationsType complex type is used to describe potential mitigations associated with a weakness. It contains one or more Mitigation elements, which each represent individual mitigations for the weakness. The Phase element indicates the development life cycle phase during which this particular mitigation may be applied. The Strategy element describes a general strategy for protecting a system to which this mitigation contributes. The Effectiveness element summarizes how effective the mitigation may be in preventing the weakness. The Description element contains a description of this individual mitigation including any strengths and shortcomings of this mitigation for the weakness."
+                  },
+                  {
+                     "__text": "The optional Mitigation_ID attribute is used by the internal CWE team to uniquely identify mitigations that are repeated across any number of individual weaknesses. To help make sure that the details of these common mitigations stay synchronized, the Mitigation_ID is used to quickly identify those mitigation elements across CWE that should be identical. The identifier is a string and should match the following format: MIT-1."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Phase",
+                                    "_type": "cwe:PhaseEnumeration",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "unbounded"
+                                 },
+                                 {
+                                    "_name": "Strategy",
+                                    "_type": "cwe:MitigationStrategyEnumeration",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Description",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Effectiveness",
+                                    "_type": "cwe:EffectivenessEnumeration",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Effectiveness_Notes",
+                                    "_type": "cwe:StructuredTextType",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           },
+                           "attribute": [
+                              {
+                                 "_name": "Mitigation_ID",
+                                 "_type": "xs:string"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Mitigation",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "PotentialMitigationsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ReferencesType complex type contains one or more reference elements, each of which is used to link to an external reference defined within the catalog. The required External_Reference_ID attribute represents the external reference entry being linked to (e.g., REF-1). Text or quotes within the same CWE entity can cite this External_Reference_ID similar to how a footnote is used, and should use the format [REF-1]. The optional Section attribute holds any section title or page number that is specific to this use of the reference."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "attribute": [
+                              {
+                                 "_name": "External_Reference_ID",
+                                 "_type": "xs:string",
+                                 "_use": "required"
+                              },
+                              {
+                                 "_name": "Section",
+                                 "_type": "xs:string"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Reference",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "ReferencesType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The RelatedAttackPatternsType complex type contains references to attack patterns associated with this weakness. The association implies those attack patterns may be applicable if an instance of this weakness exists. Each related attack pattern is identified by a CAPEC identifier."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "attribute": [
+                              {
+                                 "_name": "CAPEC_ID",
+                                 "_type": "xs:integer",
+                                 "_use": "required"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Related_Attack_Pattern",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "RelatedAttackPatternsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The RelatedWeaknessesType complex type is used to refer to other weaknesses that differ only in their level of abstraction. It contains one or more Related_Weakness elements, each of which is used to link to the CWE identifier of the other Weakness. The nature of the relation is captured by the Nature attribute. Please see the RelatedNatureEnumeration simple type definition for details about the valid value and meanings. The optional Chain_ID attribute specifies the unique ID of a named chain that a CanFollow or CanPrecede relationship pertains to. The optional Ordinal attribute is used to determine if this relationship is the primary ChildOf relationship for this weakness for a given View_ID. This attribute can only have the value \"Primary\" and should only be included for the primary parent/child relationship. For each unique triple of <Nature, CWE_ID, View_ID>, there should be only one relationship that is given a \"Primary\" ordinal."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "attribute": [
+                              {
+                                 "_name": "Nature",
+                                 "_type": "cwe:RelatedNatureEnumeration",
+                                 "_use": "required"
+                              },
+                              {
+                                 "_name": "CWE_ID",
+                                 "_type": "xs:integer",
+                                 "_use": "required"
+                              },
+                              {
+                                 "_name": "View_ID",
+                                 "_type": "xs:integer",
+                                 "_use": "required"
+                              },
+                              {
+                                 "_name": "Chain_ID",
+                                 "_type": "xs:integer"
+                              },
+                              {
+                                 "_name": "Ordinal",
+                                 "_type": "cwe:OrdinalEnumeration"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Related_Weakness",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "RelatedWeaknessesType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The RelationshipsType complex type provides elements to show the associated relationships with a given view or category. The Member_Of element is used to denote the individual categories that are included as part of the target view. The Has_Member element is used to define the weaknesses or other categories that are grouped together by a category. In both cases, the required MemberType's CWE_ID attribute specifies the unique CWE ID that is the target entry of the relationship, while the View_ID specifies which view the given relationship is relevant to."
+                  }
+               ]
+            },
+            "choice": {
+               "sequence": {
+                  "element": [
+                     {
+                        "_name": "Member_Of",
+                        "_type": "cwe:MemberType",
+                        "_minOccurs": "1",
+                        "_maxOccurs": "unbounded"
+                     },
+                     {
+                        "_name": "Has_Member",
+                        "_type": "cwe:MemberType",
+                        "_minOccurs": "0",
+                        "_maxOccurs": "unbounded"
+                     }
+                  ]
+               },
+               "element": [
+                  {
+                     "_name": "Has_Member",
+                     "_type": "cwe:MemberType",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "RelationshipsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The TaxonomyMappingsType complex type is used to provide a mapping from an entry (Weakness or Category) in CWE to an equivalent entry in a different taxonomy. The required Taxonomy_Name attribute identifies the taxonomy to which the mapping is being made. The Entry_ID and Entry_Name elements identify the ID and name of the entry which is being mapped. The Mapping_Fit element identifies how close the CWE is to the entry in the taxonomy."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Entry_ID",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Entry_Name",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Mapping_Fit",
+                                    "_type": "cwe:TaxonomyMappingFitEnumeration",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           },
+                           "attribute": [
+                              {
+                                 "_name": "Taxonomy_Name",
+                                 "_type": "cwe:TaxonomyNameEnumeration",
+                                 "_use": "required"
+                              }
+                           ]
+                        }
+                     ],
+                     "_name": "Taxonomy_Mapping",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "TaxonomyMappingsType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The WeaknessOrdinalitiesType complex type indicates potential ordering relationships with other weaknesses. The required Ordinality element identifies whether the weakness has a primary, resultant, or indirect relationship. The optional Description contains the context in which the relationship exists. It is important to note that it is possible for the same entry to be primary in some instances and resultant in others."
+                  }
+               ]
+            },
+            "sequence": {
+               "element": [
+                  {
+                     "complexType": [
+                        {
+                           "sequence": {
+                              "element": [
+                                 {
+                                    "_name": "Ordinality",
+                                    "_type": "cwe:OrdinalityEnumeration",
+                                    "_minOccurs": "1",
+                                    "_maxOccurs": "1"
+                                 },
+                                 {
+                                    "_name": "Description",
+                                    "_type": "xs:string",
+                                    "_minOccurs": "0",
+                                    "_maxOccurs": "1"
+                                 }
+                              ]
+                           }
+                        }
+                     ],
+                     "_name": "Weakness_Ordinality",
+                     "_minOccurs": "1",
+                     "_maxOccurs": "unbounded"
+                  }
+               ]
+            },
+            "_name": "WeaknessOrdinalitiesType"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The StructuredTextType complex type is used to allow XHTML content embedded within standard string data. Some common elements are: <BR/> to insert a line break, <UL><LI/></UL> to create a bulleted list, <OL><LI/></OL> to create a numbered list, and <DIV style=\"margin-left: 40px\"></DIV> to create a new indented section."
+                  }
+               ]
+            },
+            "sequence": {
+               "any": {
+                  "_namespace": "http://www.w3.org/1999/xhtml",
+                  "_minOccurs": "0",
+                  "_maxOccurs": "unbounded",
+                  "_processContents": "strict"
+               }
+            },
+            "_name": "StructuredTextType",
+            "_mixed": "true"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The StructuredCodeType complex type is used to present source code examples. It allows embedded XHTML content to enable formatting of the source code. The required Nature attribute states what type of code the example shows.  The optional Language attribute states which source code language is used in the example. This is mostly appropriate when the Nature is \"good\" or \"bad\"."
+                  }
+               ]
+            },
+            "sequence": {
+               "any": {
+                  "_namespace": "http://www.w3.org/1999/xhtml",
+                  "_minOccurs": "0",
+                  "_maxOccurs": "unbounded",
+                  "_processContents": "strict"
+               }
+            },
+            "attribute": [
+               {
+                  "_name": "Language",
+                  "_type": "cwe:LanguageNameEnumeration"
+               },
+               {
+                  "simpleType": [
+                     {
+                        "restriction": {
+                           "enumeration": [
+                              {
+                                 "_value": "attack"
+                              },
+                              {
+                                 "_value": "bad"
+                              },
+                              {
+                                 "_value": "good"
+                              },
+                              {
+                                 "_value": "informative"
+                              },
+                              {
+                                 "_value": "mitigation"
+                              },
+                              {
+                                 "_value": "result"
+                              }
+                           ],
+                           "_base": "xs:string"
+                        }
+                     }
+                  ],
+                  "_name": "Nature",
+                  "_use": "required"
+               }
+            ],
+            "_name": "StructuredCodeType",
+            "_mixed": "true"
+         }
+      ],
+      "simpleType": [
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The AbstractionEnumeration simple type defines the different abstraction levels that apply to a weakness. A \"Pillar\" is the most abstract type of weakness and represents a theme for all class/base/variant weaknesses related to it. A Pillar is different from a Category as a Pillar is still technically a type of weakness that describes a mistake, while a Category represents a common characteristic used to group related things. A \"Class\" is a weakness also described in a very abstract fashion, typically independent of any specific language or technology. More specific than a Pillar Weakness, but more general than a Base Weakness. Class level weaknesses typically describe issues in terms of 1 or 2 of the following dimensions: behavior, property, and resource. A \"Base\" is a more specific type of weakness that is still mostly independent of a resource or technology, but with sufficient details to provide specific methods for detection and prevention. Base level weaknesses typically describe issues in terms of 2 or 3 of the following dimensions: behavior, property, technology, language, and resource. A \"Variant\" is a weakness  that is linked to a certain type of product, typically involving a specific language or technology. More specific than a Base weakness. Variant level weaknesses typically describe issues in terms of 3 to 5 of the following dimensions: behavior, property, technology, language, and resource. A \"Compound\" weakness is a meaningful aggregation of several weaknesses, currently known as either a Chain or Composite."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Pillar"
+                  },
+                  {
+                     "_value": "Class"
+                  },
+                  {
+                     "_value": "Base"
+                  },
+                  {
+                     "_value": "Variant"
+                  },
+                  {
+                     "_value": "Compound"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "AbstractionEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ArchitectureClassEnumeration simple type contains a list of values corresponding to known classes of architectures. The value \"Architecture-Independent\" is used to associate with all architectures."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Embedded"
+                  },
+                  {
+                     "_value": "Microcomputer"
+                  },
+                  {
+                     "_value": "Workstation"
+                  },
+                  {
+                     "_value": "Architecture-Independent"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "ArchitectureClassEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ArchitectureNameEnumeration simple type contains a list of values corresponding to known architectures."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Alpha"
+                  },
+                  {
+                     "_value": "ARM"
+                  },
+                  {
+                     "_value": "Itanium"
+                  },
+                  {
+                     "_value": "Power Architecture"
+                  },
+                  {
+                     "_value": "SPARC"
+                  },
+                  {
+                     "_value": "x86"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "ArchitectureNameEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The DetectionMethodEnumeration simple type defines the different methods used to detect a weakness."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Automated Analysis"
+                  },
+                  {
+                     "_value": "Automated Dynamic Analysis"
+                  },
+                  {
+                     "_value": "Automated Static Analysis"
+                  },
+                  {
+                     "_value": "Automated Static Analysis - Source Code"
+                  },
+                  {
+                     "_value": "Automated Static Analysis - Binary or Bytecode"
+                  },
+                  {
+                     "_value": "Fuzzing"
+                  },
+                  {
+                     "_value": "Manual Analysis"
+                  },
+                  {
+                     "_value": "Manual Dynamic Analysis"
+                  },
+                  {
+                     "_value": "Manual Static Analysis"
+                  },
+                  {
+                     "_value": "Manual Static Analysis - Source Code"
+                  },
+                  {
+                     "_value": "Manual Static Analysis - Binary or Bytecode"
+                  },
+                  {
+                     "_value": "White Box"
+                  },
+                  {
+                     "_value": "Black Box"
+                  },
+                  {
+                     "_value": "Architecture or Design Review"
+                  },
+                  {
+                     "_value": "Dynamic Analysis with Manual Results Interpretation"
+                  },
+                  {
+                     "_value": "Dynamic Analysis with Automated Results Interpretation"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "DetectionMethodEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The DetectionEffectivenessEnumeration simple type defines the different levels of effectiveness that a detection method may have in detecting an associated weakness. The value \"High\" is used to describe a method that succeeds frequently and does not result in many false reports. The value \"Moderate\" is used to describe a method that is applicable to multiple circumstances, but it may not have complete coverage of the weakness, or it may result in a number of incorrect reports. The \"SOAR Partial\" value means that according to SOAR this method can be cost-effective for partial coverage of the objective. The value \"Opportunistic\" is used to describe a method that does not directly target the weakness but may still succeed by chance, rather than in a reliable manner. The value \"Limited\" is used to describe a method that may be useful in limited circumstances, only applicable to a subset of potential instances of a given weakness type, requires training/customization, or gives limited visibility. Even in its limited capacity, this may be part of a good defense in depth strategy. The value \"None\" is used to describe a method that is highly unlikely to work. However, it may be included in an entry to emphasize common, yet incorrect, methods that developers might introduce."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "High"
+                  },
+                  {
+                     "_value": "Moderate"
+                  },
+                  {
+                     "_value": "SOAR Partial"
+                  },
+                  {
+                     "_value": "Opportunistic"
+                  },
+                  {
+                     "_value": "Limited"
+                  },
+                  {
+                     "_value": "None"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "DetectionEffectivenessEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The EffectivenessEnumeration simple type defines the different values related to how effective a mitigation may be in preventing the weakness. A value of \"High\" means the mitigation is frequently successful in eliminating the weakness entirely. A value of \"Moderate\" means the mitigation will prevent the weakness in multiple forms, but it does not have complete coverage of the weakness. A value of \"Limited\" means the mitigation may be useful in limited circumstances, or it is only applicable to a subset of potential errors of this weakness type. A value of \"Incidental\" means the mitigation is generally not effective and will only provide protection by chance, rather than in a reliable manner. A value of \"Defense in Depth\" means the mitigation may not necessarily prevent the weakness, but it may help to minimize the potential impact of an attacker exploiting the weakness."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "High"
+                  },
+                  {
+                     "_value": "Moderate"
+                  },
+                  {
+                     "_value": "Limited"
+                  },
+                  {
+                     "_value": "Incidental"
+                  },
+                  {
+                     "_value": "Defense in Depth"
+                  },
+                  {
+                     "_value": "None"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "EffectivenessEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The FunctionalAreaEnumeration simple type defines the different functional areas in which the weakness may appear. The value \"Functional-Area-Independent\" is used to associate with all functional areas."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Authentication"
+                  },
+                  {
+                     "_value": "Authorization"
+                  },
+                  {
+                     "_value": "Code Libraries"
+                  },
+                  {
+                     "_value": "Counters"
+                  },
+                  {
+                     "_value": "Cryptography"
+                  },
+                  {
+                     "_value": "Error Handling"
+                  },
+                  {
+                     "_value": "Interprocess Communication"
+                  },
+                  {
+                     "_value": "File Processing"
+                  },
+                  {
+                     "_value": "Logging"
+                  },
+                  {
+                     "_value": "Memory Management"
+                  },
+                  {
+                     "_value": "Networking"
+                  },
+                  {
+                     "_value": "Number Processing"
+                  },
+                  {
+                     "_value": "Program Invocation"
+                  },
+                  {
+                     "_value": "Protection Mechanism"
+                  },
+                  {
+                     "_value": "Session Management"
+                  },
+                  {
+                     "_value": "Signals"
+                  },
+                  {
+                     "_value": "String Processing"
+                  },
+                  {
+                     "_value": "Functional-Area-Independent"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "FunctionalAreaEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ImportanceEnumeration simple type lists different values for importance."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Normal"
+                  },
+                  {
+                     "_value": "Critical"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "ImportanceEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The LanguageClassEnumeration simple type contains a list of values corresponding to different classes of source code languages. The value \"Language-Independent\" is used to associate with all languages."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Assembly"
+                  },
+                  {
+                     "_value": "Compiled"
+                  },
+                  {
+                     "_value": "Interpreted"
+                  },
+                  {
+                     "_value": "Language-Independent"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "LanguageClassEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The LanguageNameEnumeration simple type contains a list of values corresponding to different source code languages."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Ada"
+                  },
+                  {
+                     "_value": "ASP"
+                  },
+                  {
+                     "_value": "ASP.NET"
+                  },
+                  {
+                     "_value": "Basic"
+                  },
+                  {
+                     "_value": "C"
+                  },
+                  {
+                     "_value": "C++"
+                  },
+                  {
+                     "_value": "C#"
+                  },
+                  {
+                     "_value": "COBOL"
+                  },
+                  {
+                     "_value": "Fortran"
+                  },
+                  {
+                     "_value": "F#"
+                  },
+                  {
+                     "_value": "HTML"
+                  },
+                  {
+                     "_value": "Java"
+                  },
+                  {
+                     "_value": "JavaScript"
+                  },
+                  {
+                     "_value": "JSP"
+                  },
+                  {
+                     "_value": "Objective-C"
+                  },
+                  {
+                     "_value": "Pascal"
+                  },
+                  {
+                     "_value": "Perl"
+                  },
+                  {
+                     "_value": "PHP"
+                  },
+                  {
+                     "_value": "Python"
+                  },
+                  {
+                     "_value": "Ruby"
+                  },
+                  {
+                     "_value": "Shell"
+                  },
+                  {
+                     "_value": "SQL"
+                  },
+                  {
+                     "_value": "Swift"
+                  },
+                  {
+                     "_value": "VB.NET"
+                  },
+                  {
+                     "_value": "Verilog"
+                  },
+                  {
+                     "_value": "VHDL"
+                  },
+                  {
+                     "_value": "XML"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "LanguageNameEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The LikelihoodEnumeration simple type contains a list of values corresponding to different likelihoods. The value \"Unknown\" should be used when the actual likelihood of something occurring is not known."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "High"
+                  },
+                  {
+                     "_value": "Medium"
+                  },
+                  {
+                     "_value": "Low"
+                  },
+                  {
+                     "_value": "Unknown"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "LikelihoodEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The MitigationStrategyEnumeration simple type lists general strategies for protecting a system to which a mitigation contributes."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Attack Surface Reduction"
+                  },
+                  {
+                     "_value": "Compilation or Build Hardening"
+                  },
+                  {
+                     "_value": "Enforcement by Conversion"
+                  },
+                  {
+                     "_value": "Environment Hardening"
+                  },
+                  {
+                     "_value": "Firewall"
+                  },
+                  {
+                     "_value": "Input Validation"
+                  },
+                  {
+                     "_value": "Language Selection"
+                  },
+                  {
+                     "_value": "Libraries or Frameworks"
+                  },
+                  {
+                     "_value": "Resource Limitation"
+                  },
+                  {
+                     "_value": "Output Encoding"
+                  },
+                  {
+                     "_value": "Parameterization"
+                  },
+                  {
+                     "_value": "Refactoring"
+                  },
+                  {
+                     "_value": "Sandbox or Jail"
+                  },
+                  {
+                     "_value": "Separation of Privilege"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "MitigationStrategyEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The NoteTypeEnumeration simple type defines the different types of notes that can be associated with a weakness. An \"Applicable Platform\" note provides additional information about the list of applicable platforms for a given weakness. A \"Maintenance\" note contains significant maintenance tasks within this entry that still need to be addressed, such as clarifying the concepts involved or improving relationships. A \"Relationship\" note provides clarifying details regarding the relationships between entities. A \"Research Gap\" note identifies potential opportunities for the vulnerability research community to conduct further exploration of issues related to this weakness. It is intended to highlight parts of CWE that have not received sufficient attention from researchers. A \"Terminology\" note contains a discussion of terminology issues related to this weakness, or clarifications when there is no established terminology, or if there are multiple uses of the same key term. It is different from the Alternate_Terms element, which is focused on specific terms that are commonly used. A \"Theoretical\" note describes the weakness using vulnerability theory concepts. It should be provided as needed, especially in cases where the application of vulnerability theory is not necessarily obvious for the weakness."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Applicable Platform"
+                  },
+                  {
+                     "_value": "Maintenance"
+                  },
+                  {
+                     "_value": "Relationship"
+                  },
+                  {
+                     "_value": "Research Gap"
+                  },
+                  {
+                     "_value": "Terminology"
+                  },
+                  {
+                     "_value": "Theoretical"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "NoteTypeEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The OrdinalEnumeration simple type contains a list of values used to determine if a relationship is the primary relationship for a given weakness entry within a given view. Currently, this attribute can only have the value \"Primary\"."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Primary"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "OrdinalEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The OrdinalityEnumeration simple type contains a list of values used to indicates potential ordering relationships with other weaknesses. A primary relationship means the weakness exists independent of other weaknesses, while a resultant relationship is when a weakness exists only in the presence of some other weaknesses. An indirect relationship means the weakness does not directly lead to security-relevant weaknesses but is a quality issue that might indirectly make it easier to introduce security-relevant weaknesses or make them more difficult to detect."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Indirect"
+                  },
+                  {
+                     "_value": "Primary"
+                  },
+                  {
+                     "_value": "Resultant"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "OrdinalityEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The OperatingSystemClassEnumeration simple type contains a list of values corresponding to different classes of operating systems. The value \"OS-Independent\" is used to associate with all operating systems."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Linux"
+                  },
+                  {
+                     "_value": "macOS"
+                  },
+                  {
+                     "_value": "Unix"
+                  },
+                  {
+                     "_value": "Windows"
+                  },
+                  {
+                     "_value": "OS-Independent"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "OperatingSystemClassEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The OperatingSystemNameEnumeration simple type contains a list of values corresponding to different operating systems."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "AIX"
+                  },
+                  {
+                     "_value": "Android"
+                  },
+                  {
+                     "_value": "BlackBerry OS"
+                  },
+                  {
+                     "_value": "Chrome OS"
+                  },
+                  {
+                     "_value": "Darwin"
+                  },
+                  {
+                     "_value": "FreeBSD"
+                  },
+                  {
+                     "_value": "iOS"
+                  },
+                  {
+                     "_value": "macOS"
+                  },
+                  {
+                     "_value": "NetBSD"
+                  },
+                  {
+                     "_value": "OpenBSD"
+                  },
+                  {
+                     "_value": "Red Hat"
+                  },
+                  {
+                     "_value": "Solaris"
+                  },
+                  {
+                     "_value": "SUSE"
+                  },
+                  {
+                     "_value": "tvOS"
+                  },
+                  {
+                     "_value": "Ubuntu"
+                  },
+                  {
+                     "_value": "watchOS"
+                  },
+                  {
+                     "_value": "Windows 9x"
+                  },
+                  {
+                     "_value": "Windows Embedded"
+                  },
+                  {
+                     "_value": "Windows NT"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "OperatingSystemNameEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The PhaseEnumeration simple type lists different phases in the product life cycle."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Policy"
+                  },
+                  {
+                     "_value": "Requirements"
+                  },
+                  {
+                     "_value": "Architecture and Design"
+                  },
+                  {
+                     "_value": "Implementation"
+                  },
+                  {
+                     "_value": "Build and Compilation"
+                  },
+                  {
+                     "_value": "Testing"
+                  },
+                  {
+                     "_value": "Documentation"
+                  },
+                  {
+                     "_value": "Bundling"
+                  },
+                  {
+                     "_value": "Distribution"
+                  },
+                  {
+                     "_value": "Installation"
+                  },
+                  {
+                     "_value": "System Configuration"
+                  },
+                  {
+                     "_value": "Operation"
+                  },
+                  {
+                     "_value": "Patching and Maintenance"
+                  },
+                  {
+                     "_value": "Porting"
+                  },
+                  {
+                     "_value": "Integration"
+                  },
+                  {
+                     "_value": "Manufacturing"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "PhaseEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The PrevalenceEnumeration simple type defines the different regularities that guide the applicability of platforms."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Often"
+                  },
+                  {
+                     "_value": "Sometimes"
+                  },
+                  {
+                     "_value": "Rarely"
+                  },
+                  {
+                     "_value": "Undetermined"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "PrevalenceEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The RelatedNatureEnumeration simple type defines the different values that can be used to define the nature of a related weakness. A ChildOf nature denotes a related weakness at a higher level of abstraction. A ParentOf nature denotes a related weakness at a lower level of abstraction. The StartsWith, CanPrecede, and CanFollow relationships are used to denote weaknesses that are part of a chaining structure. The RequiredBy and Requires relationships are used to denote a weakness that is part of a composite weakness structure. The CanAlsoBe relationship denotes a weakness that, in the proper environment and context, can also be perceived as the target weakness. Note that the CanAlsoBe relationship is not necessarily reciprocal. The PeerOf relationship is used to show some similarity with the target weakness that does not fit any of the other type of relationships."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "ChildOf"
+                  },
+                  {
+                     "_value": "ParentOf"
+                  },
+                  {
+                     "_value": "StartsWith"
+                  },
+                  {
+                     "_value": "CanFollow"
+                  },
+                  {
+                     "_value": "CanPrecede"
+                  },
+                  {
+                     "_value": "RequiredBy"
+                  },
+                  {
+                     "_value": "Requires"
+                  },
+                  {
+                     "_value": "CanAlsoBe"
+                  },
+                  {
+                     "_value": "PeerOf"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "RelatedNatureEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ResourceEnumeration simple type defines different resources of a system."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "CPU"
+                  },
+                  {
+                     "_value": "File or Directory"
+                  },
+                  {
+                     "_value": "Memory"
+                  },
+                  {
+                     "_value": "System Process"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "ResourceEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ScopeEnumeration simple type defines the different areas of security that can be affected by exploiting a weakness."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Confidentiality"
+                  },
+                  {
+                     "_value": "Integrity"
+                  },
+                  {
+                     "_value": "Availability"
+                  },
+                  {
+                     "_value": "Access Control"
+                  },
+                  {
+                     "_value": "Accountability"
+                  },
+                  {
+                     "_value": "Authentication"
+                  },
+                  {
+                     "_value": "Authorization"
+                  },
+                  {
+                     "_value": "Non-Repudiation"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "ScopeEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The StatusEnumeration simple type defines the different status values that an entity (view, category, weakness) can have. A value of Deprecated refers to an entity that has been removed from CWE, likely because it was a duplicate or was created in error. A value of Obsolete is used when an entity is still valid but no longer is relevant, likely because it has been superceded by a more recent entity.  A value of Incomplete means that the entity does not have all important elements filled, and there is no guarantee of quality.  A value of Draft refers to an entity that has all important elements filled, and critical elements such as Name and Description are reasonably well-written; the entity may still have important problems or gaps.  A value of Usable refers to an entity that has received close, extensive review, with critical elements verified.  A value of Stable indicates that all important elements have been verified, and the entry is unlikely to change significantly in the future. Note that the quality requirements for Draft and Usable status are very resource-intensive to accomplish, while some Incomplete and Draft entries are actively used by the general public; so, this status enumeration might change in the future."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Deprecated"
+                  },
+                  {
+                     "_value": "Draft"
+                  },
+                  {
+                     "_value": "Incomplete"
+                  },
+                  {
+                     "_value": "Obsolete"
+                  },
+                  {
+                     "_value": "Stable"
+                  },
+                  {
+                     "_value": "Usable"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "StatusEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The StakeholderEnumeration simple type defines the different types of users within the CWE community."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Academic Researchers"
+                  },
+                  {
+                     "_value": "Applied Researchers"
+                  },
+                  {
+                     "_value": "Assessment Teams"
+                  },
+                  {
+                     "_value": "Assessment Tool Vendors"
+                  },
+                  {
+                     "_value": "CWE Team"
+                  },
+                  {
+                     "_value": "Educators"
+                  },
+                  {
+                     "_value": "Hardware Designers"
+                  },
+                  {
+                     "_value": "Information Providers"
+                  },
+                  {
+                     "_value": "Product Customers"
+                  },
+                  {
+                     "_value": "Product Vendors"
+                  },
+                  {
+                     "_value": "Software Developers"
+                  },
+                  {
+                     "_value": "Vulnerability Analysts"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "StakeholderEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The StructureEnumeration simple type lists the different structural natures of a weakness. A Simple structure represents a single weakness whose exploitation is not dependent on the presence of another weakness. A Composite is a set of weaknesses that must all be present simultaneously in order to produce an exploitable vulnerability, while a Chain is a set of weaknesses that must be reachable consecutively in order to produce an exploitable vulnerability."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Chain"
+                  },
+                  {
+                     "_value": "Composite"
+                  },
+                  {
+                     "_value": "Simple"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "StructureEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The TaxonomyMappingFitEnumeration simple type defines the different values used to describe how close a certain mapping to CWE is."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Exact"
+                  },
+                  {
+                     "_value": "CWE More Abstract"
+                  },
+                  {
+                     "_value": "CWE More Specific"
+                  },
+                  {
+                     "_value": "Imprecise"
+                  },
+                  {
+                     "_value": "Perspective"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "TaxonomyMappingFitEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The TaxonomyNameEnumeration simple type lists the different known taxomomies that can be mapped to CWE."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "7 Pernicious Kingdoms"
+                  },
+                  {
+                     "_value": "19 Deadly Sins"
+                  },
+                  {
+                     "_value": "Aslam"
+                  },
+                  {
+                     "_value": "Bishop"
+                  },
+                  {
+                     "_value": "CLASP"
+                  },
+                  {
+                     "_value": "Landwehr"
+                  },
+                  {
+                     "_value": "OMG ASCSM"
+                  },
+                  {
+                     "_value": "OMG ASCRM"
+                  },
+                  {
+                     "_value": "OMG ASCMM"
+                  },
+                  {
+                     "_value": "OMG ASCPEM"
+                  },
+                  {
+                     "_value": "OWASP Top Ten 2004"
+                  },
+                  {
+                     "_value": "OWASP Top Ten 2007"
+                  },
+                  {
+                     "_value": "OWASP Top Ten"
+                  },
+                  {
+                     "_value": "PLOVER"
+                  },
+                  {
+                     "_value": "Protection Analysis"
+                  },
+                  {
+                     "_value": "RISOS"
+                  },
+                  {
+                     "_value": "Weber, Karger, Paradkar"
+                  },
+                  {
+                     "_value": "WASC"
+                  },
+                  {
+                     "_value": "CERT C Secure Coding"
+                  },
+                  {
+                     "_value": "CERT C++ Secure Coding"
+                  },
+                  {
+                     "_value": "The CERT Oracle Secure Coding Standard for Java (2011)"
+                  },
+                  {
+                     "_value": "SEI CERT C Coding Standard"
+                  },
+                  {
+                     "_value": "SEI CERT C++ Coding Standard"
+                  },
+                  {
+                     "_value": "SEI CERT Oracle Coding Standard for Java"
+                  },
+                  {
+                     "_value": "SEI CERT Perl Coding Standard"
+                  },
+                  {
+                     "_value": "Software Fault Patterns"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "TaxonomyNameEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The TechnicalImpactEnumeration simple type describes the technical impacts that can arise if an adversary successfully exploits a weakness."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Modify Memory"
+                  },
+                  {
+                     "_value": "Read Memory"
+                  },
+                  {
+                     "_value": "Modify Files or Directories"
+                  },
+                  {
+                     "_value": "Read Files or Directories"
+                  },
+                  {
+                     "_value": "Modify Application Data"
+                  },
+                  {
+                     "_value": "Read Application Data"
+                  },
+                  {
+                     "_value": "DoS: Crash, Exit, or Restart"
+                  },
+                  {
+                     "_value": "DoS: Amplification"
+                  },
+                  {
+                     "_value": "DoS: Instability"
+                  },
+                  {
+                     "_value": "DoS: Resource Consumption (CPU)"
+                  },
+                  {
+                     "_value": "DoS: Resource Consumption (Memory)"
+                  },
+                  {
+                     "_value": "DoS: Resource Consumption (Other)"
+                  },
+                  {
+                     "_value": "Execute Unauthorized Code or Commands"
+                  },
+                  {
+                     "_value": "Gain Privileges or Assume Identity"
+                  },
+                  {
+                     "_value": "Bypass Protection Mechanism"
+                  },
+                  {
+                     "_value": "Hide Activities"
+                  },
+                  {
+                     "_value": "Alter Execution Logic"
+                  },
+                  {
+                     "_value": "Quality Degradation"
+                  },
+                  {
+                     "_value": "Unexpected State"
+                  },
+                  {
+                     "_value": "Varies by Context"
+                  },
+                  {
+                     "_value": "Reduce Maintainability"
+                  },
+                  {
+                     "_value": "Reduce Performance"
+                  },
+                  {
+                     "_value": "Reduce Reliability"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "TechnicalImpactEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The TechnologyClassEnumeration simple type contains a list of values corresponding to different classes of technologies. The value \"Technology-Independent\" is used to associate with all technologies."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "Represents technology involving a distributed application but for the purposes of CWE does not leverage a web browser."
+                           }
+                        ]
+                     },
+                     "_value": "Client Server"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "Represents technology that involves data storage and computing power being made available to multiple users via the internet instead of using local systems, without the need for users to perform all system management themselves."
+                           }
+                        ]
+                     },
+                     "_value": "Cloud Computing"
+                  },
+                  {
+                     "_value": "Mainframe"
+                  },
+                  {
+                     "_value": "Mobile"
+                  },
+                  {
+                     "_value": "N-Tier"
+                  },
+                  {
+                     "_value": "SOA"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "Represents technology that integrates all components of a computer within a single integrated circuit, to include FPGA and ASIC."
+                           }
+                        ]
+                     },
+                     "_value": "System on Chip"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "Represents technology that involves applications or single-page sites that leverage a web browser to support client interactions."
+                           }
+                        ]
+                     },
+                     "_value": "Web Based"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "Used to associate with all classes of technologies."
+                           }
+                        ]
+                     },
+                     "_value": "Technology-Independent"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "TechnologyClassEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The TechnologyNameEnumeration simple type contains a list of values corresponding to different technologies. A technology represents a generally accepted feature of a system and often refers to a high-level functional component within a system."
+                  },
+                  {
+                     "__text": "Within this context, \"IP\" stands for \"Intellectual Property\" and is the term used to distinguish unique blocks within a System on Chip, with each block potentially coming from a different source."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Web Server"
+                  },
+                  {
+                     "_value": "Database Server"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP dedicated to offload a specific workload to enhance performance: DSP, packet processing, mathematical, compression, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Accelerator IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP that controls/senses the electricals for communication which receives/transmits signals conditioned outside of a system’s digital domain."
+                           }
+                        ]
+                     },
+                     "_value": "Analog and Mixed Signal IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP designed to manipulate audio/video data: coders/decoders, speech recognition, format converters, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Audio/Video IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP implementing an interconnect among elements in a computing system: I2C, PCIe, DDR, MMC, USB, GPIO, NoC, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Bus/Interface IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP reflecting the passage of time in oscillations or human units: Real Time Clock, Watchdog, Monotonic Counter, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Clock/Counter IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP designed to transmit/receive information: Modulator/Demodulator, GPS, 802.11, Bluetooth, CDMA/DSM, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Communication IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP circuit hard-wired (e.g., an FSM) to react in a closed-loop control system or other limited context, to control another entity: Arbiter, APIC, USB, Peripheral, Memory, Storage, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Controller IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP implementing volatile (transient) data storage: DRAM, SRAM, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Memory IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP implementing a specialized processor acting as a programmable controller."
+                           }
+                        ]
+                     },
+                     "_value": "Microcontroller IP"
+                  },
+                  {
+                     "_value": "Network on Chip IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP that controls and/or monitors the power state of a system: voltage regulators, power controllers, power monitors, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Power Management IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP implementing a general-purpose computing engine: CPU, GPU, RISC, CISC, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Processor IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP designed to protect assets: cryptography, auth, tamper detection, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Security IP"
+                  },
+                  {
+                     "_value": "Sensor IP"
+                  },
+                  {
+                     "_value": "Storage IP"
+                  },
+                  {
+                     "annotation": {
+                        "documentation": [
+                           {
+                              "__text": "IP designed to verify functionality and identify root cause of defects: JTAG, BIST, boundary scan, pattern generator, etc."
+                           }
+                        ]
+                     },
+                     "_value": "Test/Debug IP"
+                  },
+                  {
+                     "_value": "Other"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "TechnologyNameEnumeration"
+         },
+         {
+            "annotation": {
+               "documentation": [
+                  {
+                     "__text": "The ViewTypeEnumeration simple type defines the different types of views that can be found within CWE. A graph is a hierarchical representation of weaknesses based on a specific vantage point that a user may take. The hierarchy often starts with a category, followed by a class/base weakness, and ends with a variant weakness. In addition to graphs, a view can be a slice, which is a flat list of entries that does not specify any relationships between those entries. An explicit slice is a subset of weaknesses that are related through some external factor. For example, an explicit slice may be used to represent mappings to external groupings like a Top-N list. An implicit slice is a subset of weaknesses that are related through a specific attribute, as indicated by the Filter element of the View. For example, an implicit slice may refer to all weaknesses in draft status, or all class level weaknesses."
+                  }
+               ]
+            },
+            "restriction": {
+               "enumeration": [
+                  {
+                     "_value": "Implicit"
+                  },
+                  {
+                     "_value": "Explicit"
+                  },
+                  {
+                     "_value": "Graph"
+                  }
+               ],
+               "_base": "xs:string"
+            },
+            "_name": "ViewTypeEnumeration"
+         }
+      ],
+      "_xmlns:xs": "http://www.w3.org/2001/XMLSchema",
+      "_xmlns:cwe": "http://cwe.mitre.org/cwe-6",
+      "_xmlns:xhtml": "http://www.w3.org/1999/xhtml",
+      "_targetNamespace": "http://cwe.mitre.org/cwe-6",
+      "_elementFormDefault": "qualified",
+      "_attributeFormDefault": "unqualified",
+      "_version": "6.3"
+   }
+}
