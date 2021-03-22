@@ -1,0 +1,22 @@
+,special elements,downstream component,protection mechanism,web application,access control,memory location,protection mechanisms,buffer overflow,source code,input validation,memory locations,control flow,web server,data structure,random number,race condition,regular expression,shared resource,data element,security identifier,security critical
+special elements,52,33,1,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,0
+downstream component,33,39,1,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0
+protection mechanism,1,1,31,1,1,0,11,0,0,1,0,0,0,0,0,0,1,0,0,0,0
+web application,0,0,1,32,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0
+access control,0,0,1,0,29,0,1,0,0,0,0,1,2,0,0,0,0,0,0,0,0
+memory location,0,0,0,0,0,19,0,1,0,0,9,0,0,2,0,0,0,0,0,0,0
+protection mechanisms,1,1,11,1,1,0,11,0,0,1,0,0,0,0,0,0,1,0,0,0,0
+buffer overflow,0,0,0,0,0,1,0,21,0,2,1,1,0,1,0,0,0,0,0,0,0
+source code,0,0,0,0,0,0,0,0,22,0,0,0,3,0,0,0,0,0,0,0,0
+input validation,1,1,1,0,0,0,1,2,0,14,0,1,0,0,0,0,0,0,0,0,0
+memory locations,0,0,0,0,0,9,0,1,0,0,9,0,0,2,0,0,0,0,0,0,0
+control flow,1,0,0,0,1,0,0,1,0,1,0,16,0,0,0,0,0,0,0,0,0
+web server,0,0,0,0,2,0,0,0,3,0,0,0,13,0,0,0,0,0,0,0,0
+data structure,1,1,0,0,0,2,0,1,0,0,2,0,0,10,0,0,0,0,0,0,0
+random number,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,0,0,0,0,0
+race condition,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,13,0,0,0,0,0
+regular expression,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,9,0,0,0,0
+shared resource,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0
+data element,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0
+security identifier,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0
+security critical,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1

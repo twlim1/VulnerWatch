@@ -1,0 +1,324 @@
+0.9731306755	sql injection
+0.9720154726	ip address
+0.9651326138	cross site scripting
+0.9544047942	social engineering
+0.9543664383	web browser
+0.9474228318	buffer overflow
+0.9385082132	web server
+0.9342335044	operating systems
+0.9203594897	supply chain
+0.9087193565	sequence number
+0.9078677065	access control
+0.9011946970	web services
+0.8987025112	web service
+0.8984580259	cross domain
+0.8980490417	error message
+0.8805866154	closed ports
+0.8774209976	credential prompt
+0.8759358037	brute force
+0.8711727875	input validation
+0.8701660110	http request
+0.8664017864	web application
+0.8516721021	legitimate users
+0.8485392413	malicious script
+0.8475986330	client side
+0.8109706534	icmp error message
+0.8047448211	icmp type
+0.7817122721	sensitive information
+0.7612837522	closed port
+0.7476561244	malicious logic
+0.7440952718	remote host
+0.7429675458	rfc 793
+0.7322978359	execute arbitrary code
+0.7169827108	vulnerable web
+0.6874170255	domain name
+0.6789378203	http get
+0.6634538071	arbitrary code
+0.6579261048	takes advantage of
+0.6318214659	error messages
+0.6140070766	operating system
+0.6104233598	unauthorized access
+0.5922144029	os fingerprinting
+0.5784908964	third party
+0.5765614584	this os fingerprinting probe
+0.5689378731	service provider
+0.5480190237	malicious code
+0.5212286112	malicious content
+0.5197661038	an open port
+0.5189029809	malicious application
+0.5186627195	denial of service
+0.4902547265	obtain sensitive
+0.4832433222	rather than
+0.4810363579	victim's browser
+0.4786200117	information about
+0.4456271541	man in
+0.4434397749	interacting with
+0.4246781380	the victim's browser
+0.4212315208	cross site
+0.4065502004	differs from
+0.4026644645	target application
+0.3887064627	this type exploits
+0.3866212373	an attacker
+0.3844303437	take advantage of
+0.3629549623	variety of
+0.3622045707	an adversary
+0.3537237423	attack pattern
+0.3459036280	does not
+0.3295851093	lead to
+0.3280379040	this pattern of attack
+0.3229237329	as well as
+0.3179432439	target system
+0.3159302510	rely on
+0.3132996481	this attack pattern
+0.3076764936	the middle
+0.3034303147	relies on
+0.3029965767	in order to
+0.2952132287	this type of attack
+0.2903451410	result in
+0.2870313086	this attack
+0.2805612671	depending on
+0.2794892091	an adversary engages in
+0.2695725424	this attack differs from
+0.2688612050	execute arbitrary
+0.2687672656	flooding attack
+0.2646142091	such as
+0.2641142091	the purpose of
+0.2616329814	an adversary exploits
+0.2550893087	for instance
+0.2533490130	a large number of
+0.2517022838	attempt to
+0.2479461688	the attacker
+0.2423591466	attempts to
+0.2322667476	this attack targets
+0.2322656224	this type of
+0.2275253544	accomplished by
+0.2242408112	the service provider
+0.2222752658	based on
+0.2198033116	the adversary
+0.2189060394	weaknesses in
+0.2175931132	the target software
+0.2145989557	a weakness in
+0.2124647922	engages in
+0.2095890772	adversary uses
+0.2079453342	gain access to
+0.2063109411	a buffer overflow
+0.2052052724	the victim
+0.2046790779	denial of
+0.1977376254	for example
+0.1951969391	the original
+0.1939209014	the victim's
+0.1922605829	some cases
+0.1908536971	types of
+0.1907975948	able to
+0.1877467102	ability to
+0.1872994212	targeted application
+0.1842719538	due to
+0.1839906019	access to
+0.1836955265	a flooding attack
+0.1829137069	sensitive data
+0.1788103455	gain access
+0.1755030221	an attacker exploits
+0.1719733524	the target
+0.1718225502	an adversary engages
+0.1715759166	resulting in
+0.1709687489	target software
+0.1692737726	an application
+0.1591871352	the adversary's
+0.1580232942	number of
+0.1564523624	large number of
+0.1563062528	part of
+0.1520297005	but instead
+0.1515566857	a victim
+0.1512395741	the targeted application
+0.1475640710	the content of
+0.1431089049	associated with
+0.1426018861	the goal of
+0.1411125456	into performing
+0.1377770122	attack leverages
+0.1351714489	try to
+0.1331978974	type of
+0.1277066857	the same
+0.1273876004	the use of
+0.1237783567	an attempt to
+0.1191029042	a target
+0.1147575234	to determine if
+0.1100716240	this pattern
+0.1089887350	out of
+0.1060564532	do not
+0.1018875223	the underlying
+0.1007898495	attack against
+0.0993443500	the target system
+0.0984875702	an attacker manipulates
+0.0977015710	a denial of service
+0.0959386077	to achieve
+0.0955082201	file system
+0.0857932376	the integrity of
+0.0852496767	protected by
+0.0834182376	to gain access to
+0.0797373122	the chip
+0.0795432376	an attack of
+0.0785432376	the operating system
+0.0780830100	attacks against
+0.0769629775	the server
+0.0749629775	the client
+0.0737932376	the ability to
+0.0737932376	a form of
+0.0735830100	range of
+0.0712943500	these attacks
+0.0680254775	the application
+0.0667463108	the system
+0.0665313598	in addition
+0.0663629775	the host
+0.0657373122	the lock
+0.0656420741	this os
+0.0653439298	to determine
+0.0639629775	the attack
+0.0634006571	designed to
+0.0627253024	an adversary uses
+0.0613330100	determine if
+0.0610296441	an attack
+0.0604101809	results in
+0.0600819200	a result
+0.0599629775	the user
+0.0543629775	the targeted
+0.0543149428	form of
+0.0541963108	the target's
+0.0535373122	the hash
+0.0529629775	a legitimate
+0.0529227814	used by
+0.0524629775	to perform
+0.0508149428	difficult to
+0.0507463108	used to
+0.0500796441	a system
+0.0495866515	request to
+0.0491740069	the url
+0.0485866515	application to
+0.0485866515	server to
+0.0485866515	input to
+0.0478629775	the attackers
+0.0475866515	information to
+0.0465866515	content to
+0.0465866515	content of
+0.0463504775	a tcp
+0.0461199848	attacker to
+0.0455632926	an application's
+0.0436580801	vulnerable to
+0.0423629775	to execute
+0.0418499873	the attacker to
+0.0415394481	a user
+0.0409816095	set of
+0.0392533182	information from
+0.0390796441	to cause
+0.0385394481	the message
+0.0382463108	and then
+0.0369958952	integrity of
+0.0364324336	useful for
+0.0364263878	to load
+0.0361491015	to gain access
+0.0360394481	a specific
+0.0359816095	execution of
+0.0354420741	a rst
+0.0354263878	the intent
+0.0344420741	by sending
+0.0336087408	the product
+0.0328510623	the target application
+0.0322533182	data from
+0.0304420741	to produce
+0.0303171441	the database
+0.0295866515	code to
+0.0292754074	to solicit
+0.0292463108	a particular
+0.0291580801	response to
+0.0291580801	similar to
+0.0286087408	to steal
+0.0285866515	weakness in
+0.0284420741	the fact
+0.0276406735	a url
+0.0261580801	advantage of
+0.0255866515	goal of
+0.0255866515	pattern of
+0.0253499873	with access to
+0.0252495671	the result
+0.0246406735	the error
+0.0246087408	to launch
+0.0245866515	purpose of
+0.0241199848	target to
+0.0236087408	to generate
+0.0234936147	a client
+0.0233499873	the target to
+0.0231199848	victim to
+0.0230830978	a buffer
+0.0223499873	the adversary to
+0.0214936147	the key
+0.0199936147	an authentication
+0.0198171441	a port
+0.0186406735	to discover
+0.0184936147	the protocol
+0.0179936147	a host
+0.0178171441	a resource
+0.0177421441	likely to
+0.0176406735	in place
+0.0173686147	a malicious
+0.0169936147	a session
+0.0168171441	to change
+0.0166602814	this information
+0.0164936147	a file
+0.0164936147	the request
+0.0164936147	the file
+0.0163499873	an attacker to
+0.0159088108	as well
+0.0158171441	a valid
+0.0154936147	the service
+0.0153401833	often used
+0.0149936147	a network
+0.0149936147	the browser
+0.0148171441	to send
+0.0148171441	to create
+0.0148171441	the password
+0.0146406735	to prevent
+0.0139936147	a server
+0.0139936147	the software
+0.0139936147	the content
+0.0139936147	the web
+0.0139936147	the input
+0.0139088108	the first
+0.0128686147	a remote
+0.0128171441	to impersonate
+0.0128171441	to inject
+0.0126504775	the ability
+0.0119936147	the malicious
+0.0118171441	to identify
+0.0118171441	the structure
+0.0118171441	an action
+0.0099088108	or otherwise
+0.0098171441	to bypass
+0.0098171441	the domain
+0.0089936147	an open
+0.0089936147	to obtain
+0.0088171441	to detect
+0.0088171441	a large
+0.0079936147	to gain
+0.0079936147	a targeted
+0.0079936147	a weakness
+0.0079936147	this type
+0.0079936147	the goal
+0.0079936147	the execution
+0.0079936147	in response
+0.0069936147	to exploit
+0.0069936147	a service
+0.0069936147	a response
+0.0069936147	a web
+0.0069936147	the functionality
+0.0069936147	the network
+0.0069936147	the security
+0.0069088108	to get
+0.0069088108	a new
+0.0069088108	or even
+0.0065852814	use of
+0.0057519481	an attacker uses
+0.0055852814	a way
+0.0050852814	sent to
+0.0050852814	possible to
+0.0050852814	and so
+0.0050852814	instead of
+0.0050852814	to make

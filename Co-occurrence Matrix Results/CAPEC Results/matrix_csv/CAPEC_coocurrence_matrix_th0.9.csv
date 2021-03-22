@@ -1,0 +1,13 @@
+,operating systems,access control,web server,web browser,buffer overflow,social engineering,ip address,supply chain,sequence number,web services,sql injection,cross site scripting
+operating systems,23,0,0,0,0,0,2,0,5,0,0,0
+access control,0,22,0,0,1,0,1,1,0,0,0,0
+web server,0,0,18,4,0,0,0,0,0,1,0,1
+web browser,0,0,4,15,0,0,1,0,0,0,0,0
+buffer overflow,0,1,0,0,18,0,0,0,0,0,0,0
+social engineering,0,0,0,0,0,18,0,0,0,0,0,0
+ip address,2,1,0,1,0,0,11,0,0,0,0,0
+supply chain,0,1,0,0,0,0,0,13,0,0,0,0
+sequence number,5,0,0,0,0,0,0,0,6,0,0,0
+web services,0,0,1,0,0,0,0,0,0,9,0,0
+sql injection,0,0,0,0,0,0,0,0,0,0,9,0
+cross site scripting,0,0,1,0,0,0,0,0,0,0,0,1
