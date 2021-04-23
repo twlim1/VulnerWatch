@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{%- block content -%}
+
+<!-- =============== Sandbox Inputs =============== -->
+<div id="sandboxContainer">
+    <div id="sandboxInput" class="form-group shadow-textarea">
+        <h5><label for="inputTextarea">Security-related Text:</label></h5>
+        <textarea class="form-control z-depth-1" id="inputTextarea" rows="3" placeholder="Enter text here..."></textarea>
+    </div>
+
+    <div style="line-height:50%;"><br></div>
+
+    <div>
+        <button id="inputButton" type="button" class="button button-md radius-10">Annotate</button>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <span id="inputNotificationZone"></span>
+    </div>
+
+    <div style="line-height:200%;"><br></div>
+
+    <div id="sandboxOutput" class="form-group shadow-textarea">
+        <h5><label for="outputTextarea">API Output:</label></h5>
+        <textarea class="form-control z-depth-1" id="outputTextarea" rows="3" readonly></textarea>
+    </div>
+</div>
+
+<!-- ==================== JS ==================== -->
+<script>
+    document.getElementById('inputButton').onclick = submitText;
+
+    function msgUser(text) {
+        let ele = document.getElementById('inputNotificationZone');
+
+        /* message is already present...maybe user is spam clicking */
+        if (ele.textContent !== undefined && ele.textContent !== "") {
+            return;
+        }
+
+        ele.style.opacity = 1;
+        ele.textContent = text;
+
+        setTimeout(clearMsg, 5000);
+    }
+
+    /* Fades out the box that displays messages */
+    function clearMsg() {
+        let ele = document.getElementById('inputNotificationZone');
+
+        let timerId = setInterval(function() {
+            var opacity = ele.style.opacity;
+
+            /* last iteration */
+            if (opacity <= 0) {
+                clearInterval(timerId);
+                ele.textContent = '';
+
+            /* most iterations */
+            } else {
+                ele.style.opacity = opacity - 0.03;
+            }
+        }, 50);
+    }
+
+    /* Landing zone for starting an api request */
+    function submitText() {
+        let value = document.getElementById('inputTextarea').value;
+
+        if (value === undefined || value === '') {
+            msgUser('Need input text!');
+            return;
+        }
+
+        makeApiRequest(value);
+    }
+
+    /* Sends text to our api */
+    function makeApiRequest(text) {
+        let req = new XMLHttpRequest();
+        let url = 'api';
+        let params = `text=${text}`;
+
+        req.open('POST', url, true); // true == asynchronous 
+        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        req.onreadystatechange = function() { 
+            if (req.readyState == 4 && req.status == 200) {
+                showResponse(req.responseText);
+            }
+        }
+        req.send(params);
+    }
+
+    /* Update text box */
+    function showResponse(text) {
+        document.getElementById('outputTextarea').value = text;
+    }
+</script>
+
+{%- endblock -%}
