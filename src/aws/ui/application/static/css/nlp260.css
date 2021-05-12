@@ -1,0 +1,9 @@
+#sandboxContainer {
+    width: 50%;
+    margin: 0 auto;
+}
+
+#inputNotificationZone {
+  color: #dd3333;
+  font-family: "Fira Sans", sans-serif;
+}
