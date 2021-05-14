@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{%- block content -%}
+
+<!-- ========================= hero-2 start ========================= -->
+<div class="hero-section hero-style-2">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content-wrapper">
+                    <h4>Analyze your cyber-security text</h4>
+                    <h2 class="mb-30">With a pre-trained BERT Model</h2>
+                    <p class="mb-50">No purchase necessary.</p>
+                    <div class="buttons">
+                        <a href="sandbox.html" class="button button-lg radius-10">Launch Sandbox</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image">
+                    <img src="{{ url_for('static', filename='img/hero/hero-2/hero-img.svg') }}" alt="">
+                    <img src="{{ url_for('static', filename='img/hero/hero-2/paattern.svg') }}" alt="" class="shape shape-1">
+                    <link rel="icon" href="{{ url_for('static', filename='images/favicon.svg') }}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ========================= hero-2 end ========================= -->
+
+{%- endblock -%}
+
