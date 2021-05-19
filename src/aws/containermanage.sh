@@ -222,11 +222,15 @@ run_ui_container() {
 
 run_db_container() {
     docker volume create "$DB_VOLUME" 2>/dev/null
+
+    # If the order of the below options is changed, the postgres container may
+    # not be publicly available.
     docker run --name "$DB_CONTAINER" \
+               -d \
                --mount source="$DB_VOLUME",target="$DB_MOUNT_LOC" \
                -e POSTGRES_PASSWORD="$DBPW" \
                -p 5432:5432 \
-               -d postgres:latest
+               postgres:latest
 }
 
 run_dba_container() {
