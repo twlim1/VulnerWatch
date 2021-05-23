@@ -4,7 +4,9 @@
 
 Any small instance should be fine. Amazon linux isn't necessary but some commands may need to be reworked on different OSes.
 
-It is necessary to add an entry to the automatically created security group. Add an inbound rule for HTTP so that port 80 is opened up.
+### Add Entries to Security Group
+- Add an inbound rule for HTTP so that port 80 is opened up.
+- Add an inbound rule for postgresql so that port 5432 is opened up.
 
 Login to the node for the rest of the steps:
 `ssh -i <key.pem> ec2-user@<ip>`
