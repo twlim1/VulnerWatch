@@ -8,11 +8,14 @@ RUN zypper update -y && \
 		      gcc
 
 # Misc config
+RUN mkdir /models
 RUN mkdir /dba_scripts
 RUN mkdir /application
-RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN echo 'set -o vi' >> /root/.bashrc
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
+# Copy local files
+COPY models /models
 COPY dba_scripts /dba_scripts
 COPY application /application
 
@@ -20,4 +23,5 @@ COPY application /application
 RUN cd /application && \
     pip install -r ./requirements.txt
 
+CMD ["python", "/application/db_init.py"]
 CMD ["/bin/bash", "/dba_scripts/dba.sh"]
