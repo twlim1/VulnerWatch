@@ -234,7 +234,7 @@ run_db_container() {
 }
 
 run_dba_container() {
-    docker run --name "$DBA_CONTAINER" -p 80:80 -d --net host "$DBA_CONTAINER"
+    docker run --name "$DBA_CONTAINER" -p 81:81 -d --net host "$DBA_CONTAINER"
 }
 
 run_containers() {
