@@ -30,10 +30,27 @@ cd 260_capstone/src/aws
 ```
 
 ### To create fresh images and containers
+- Download all the models into 260_capstone/src/aws/dba/models folders
+```
+260_capstone/src/aws/dba/models
+    ├───AC
+    ├───AI
+    ├───AV
+    ├───CI
+    ├───II
+    ├───PR
+    ├───SC
+    └───UI
+```
+- Pre-trained and fine-tuned models can be found on Google Drive here
+```
+https://drive.google.com/drive/u/1/folders/1pCKXd2jkf2EZjvlAnzFXNMxyaTsRDxau
+```
+- After placing the models in the folders, run the following command to create images and containers
 ```
 ./containermanage.sh fresh
 ```
-- After launching the containers, the database and tables are created but empty. Run the following commands to populate test data
+- The database and tables will be created but empty. Run the following commands to populate test data
 ```
 ./containermanage.sh connect dba
 python application/data_download_cve.py --test_mode
