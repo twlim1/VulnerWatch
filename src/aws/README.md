@@ -39,3 +39,8 @@ cd 260_capstone/src/aws
 python application/data_download_cve.py --test_mode
 python application/batch_prediction.py
 ```
+- To predict severity of cyber security threat from user input description
+```
+./containermanage.sh connect dba
+python application/single_prediction.py --description "A flaw was found in libwebp in versions before ..."
+```
