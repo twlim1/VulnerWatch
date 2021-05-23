@@ -71,7 +71,7 @@ class DatabaseUtil:
         self.cursor = self.conn.cursor()
         self.enable_log = enable_log
 
-    def __del__(self):
+    def close(self):
         if self.conn:
             self.conn.close()
 
@@ -127,7 +127,7 @@ class DatabaseUtil:
         try:
             query = 'INSERT INTO {table} {keys} VALUES {values};'.format(
                 table=TABLE_CVES,
-                keys=re.sub(r'\'', '', tuple(metadata.keys()).__str__()),
+                keys=re.sub(r'\'', '', str(tuple(metadata.keys()))),
                 values=tuple(str(v) for v in metadata.values()))
             if self.enable_log:
                 print('Query: {}'.format(query))
@@ -169,7 +169,7 @@ class DatabaseUtil:
     def insert_score(self, scores):
         query = 'INSERT INTO {table} {keys} VALUES {values};'.format(
             table=TABLE_SCORES,
-            keys=re.sub(r'\'', '', tuple(scores.keys()).__str__()),
+            keys=re.sub(r'\'', '', str(tuple(scores.keys()))),
             values=tuple(str(v) for v in scores.values()))
         if self.enable_log:
             print('Query: {}'.format(query))

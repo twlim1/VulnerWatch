@@ -62,7 +62,7 @@ if __name__ == '__main__':
     parser.add_argument('--db_name', default='vulner_watch')
     parser.add_argument('--db_user', default='postgres')
     parser.add_argument('--db_pass', default='vulnerwatch')
-    parser.add_argument('--db_host', default='0.0.0.0')
+    parser.add_argument('--db_host', default='localhost')
     parser.add_argument('--db_port', default='5432')
     parser.add_argument('--test_mode', dest='test_mode', action='store_true')
     params = parser.parse_args()
@@ -105,4 +105,3 @@ if __name__ == '__main__':
     print('Metadata record count: {}'.format(db.run_raw_query('SELECT count(*) FROM metadata', True)))
     print('Predicted record count: {}'.format(db.run_raw_query('SELECT count(*) FROM scores where model <> \'manual\'', True)))
     print('Metadata record count: {}'.format(db.run_raw_query('SELECT * FROM metadata', True)))
-

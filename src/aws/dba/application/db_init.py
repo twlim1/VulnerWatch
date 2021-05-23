@@ -13,7 +13,7 @@ if __name__ == '__main__':
     parser.add_argument('--db_name', default='vulner_watch')
     parser.add_argument('--db_user', default='postgres')
     parser.add_argument('--db_pass', default='vulnerwatch')
-    parser.add_argument('--db_host', default='0.0.0.0')
+    parser.add_argument('--db_host', default='localhost')
     parser.add_argument('--db_port', default='5432')
     params = parser.parse_args()
 

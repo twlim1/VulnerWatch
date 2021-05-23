@@ -23,4 +23,5 @@ COPY application /application
 RUN cd /application && \
     pip install -r ./requirements.txt
 
+CMD ["python", "/application/db_init.py"]
 CMD ["/bin/bash", "/dba_scripts/dba.sh"]

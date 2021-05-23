@@ -29,4 +29,13 @@ cd 260_capstone/src/aws
 ./containermanage.sh -h
 ```
 
-
+### To create fresh images and containers
+```
+./containermanage.sh fresh
+```
+- After launching the containers, the database and tables are created but empty. Run the following commands to populate test data
+```
+./containermanage.sh connect dba
+python application/data_download_cve.py --test_mode
+python application/batch_prediction.py
+```
