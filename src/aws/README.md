@@ -53,11 +53,11 @@ https://drive.google.com/drive/u/1/folders/1pCKXd2jkf2EZjvlAnzFXNMxyaTsRDxau
 - The database and tables will be created but empty. Run the following commands to populate test data
 ```
 ./containermanage.sh connect dba
-python application/data_download_cve.py --test_mode
-python application/batch_prediction.py
+python dba_scripts/data_download_cve.py --test_mode
+python dba_scripts/batch_prediction.py
 ```
 - To predict severity of cyber security threat from user input description
 ```
 ./containermanage.sh connect dba
-python application/single_prediction.py --description "A flaw was found in libwebp in versions before ..."
+python dba_scripts/single_prediction.py --description "A flaw was found in libwebp in versions before ..."
 ```
