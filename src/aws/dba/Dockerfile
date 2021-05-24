@@ -25,4 +25,5 @@ RUN cd /application && \
 RUN cd /dba_scripts && \
     pip install -r ./requirements.txt
 
+CMD ["python", "/application/db_init.py"]
 CMD ["/bin/bash", "/dba_scripts/dba.sh"]
