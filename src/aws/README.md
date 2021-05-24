@@ -50,7 +50,7 @@ https://drive.google.com/drive/u/1/folders/1pCKXd2jkf2EZjvlAnzFXNMxyaTsRDxau
 ```
 ./containermanage.sh fresh
 ```
-Run the following commands to populate database, tables and test data
+Run the following commands to populate a database, tables and test data
 ```
 ./containermanage.sh connect dba
 python dba_scripts/db_init.py
