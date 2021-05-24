@@ -50,9 +50,10 @@ https://drive.google.com/drive/u/1/folders/1pCKXd2jkf2EZjvlAnzFXNMxyaTsRDxau
 ```
 ./containermanage.sh fresh
 ```
-- The database and tables will be created but empty. Run the following commands to populate test data
+Run the following commands to populate a database, tables and test data
 ```
 ./containermanage.sh connect dba
+python dba_scripts/db_init.py
 python dba_scripts/data_download_cve.py --test_mode
 python dba_scripts/batch_prediction.py
 ```
