@@ -9,9 +9,19 @@ if ! [ -e "$FLASK_APP" ]; then
     exit 1
 fi
 
+
 if [[ "$(whoami)" != "root" ]]; then
     export FLASK_ENV=development
+
+    # attempt to give application access to 'lib'
+    export PYTHONPATH="$PYTHONPATH:../dba_scripts"
+
     python -m flask run
 else
+    export FLASK_ENV=development
+
+    # give application access to 'lib'
+    export PYTHONPATH="$PYTHONPATH:/dba_scripts"
+
     python -m flask run -h 0.0.0.0 -p 81
 fi
