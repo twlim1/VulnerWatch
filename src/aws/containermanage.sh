@@ -16,6 +16,9 @@ DBA_CONTAINER="dba"             # aka "dba"
 DB_VOLUME="postgres_volume"
 DB_MOUNT_LOC="/var/lib/postgresql/data" # directory within container
 
+# Models path to be mounted inside dba container
+DBA_MODELS="/home/ec2-user/260_capstone/models"
+
 UI_ARCHIVE="ui.tar.gz"
 #DB_ARCHIVE="db.tar.gz"
 DB_ARCHIVE="db.sql.gz"
@@ -234,7 +237,7 @@ run_db_container() {
 }
 
 run_dba_container() {
-    docker run --name "$DBA_CONTAINER" -p 81:81 -d --net host "$DBA_CONTAINER"
+    docker run --name "$DBA_CONTAINER" -p 81:81 -d --gpus all -v $DBA_MODELS:/models --net host "$DBA_CONTAINER"
 }
 
 run_containers() {

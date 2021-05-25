@@ -30,9 +30,9 @@ cd 260_capstone/src/aws
 ```
 
 ### To create fresh images and containers
-- Download all the models into 260_capstone/src/aws/dba/models folders
+- Download all the models into 260_capstone/models/ folders
 ```
-260_capstone/src/aws/dba/models
+260_capstone/models/
     ├───AC
     ├───AI
     ├───AV
