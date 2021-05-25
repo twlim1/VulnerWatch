@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 
+import requests
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -17,4 +19,11 @@ def api():
     except KeyError:
         return 'Bad input'
 
-    return inputText
+    url = 'http://127.0.0.1:81/predict'
+    res = requests.post(url, data={'text': inputText})
+    try:
+        res.raise_for_status()
+    except:
+        return 'Internal Error' # TODO: improve error handling/messaging
+
+    return res.text
