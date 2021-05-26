@@ -18,16 +18,17 @@ def refresh_data():
     app.logger.info('Scheduler task started at: {}'.format(time.strftime("%A, %d. %B %Y %I:%M:%S %p")))
 
     output = os.system('python ../dba_scripts/data_download_cve.py')
-    app.logger.debug(output)
+    app.logger.debug('Return: {}'.format(output))
     app.logger.info('Completed cve download: {}'.format(time.strftime("%A, %d. %B %Y %I:%M:%S %p")))
 
+    # Save the GPU resources for the interactive webpage (use --use_gpu to make use of GPU resource if available)
     output = os.system('python ../dba_scripts/batch_prediction.py')
-    app.logger.debug(output)
+    app.logger.debug('Return: {}'.format(output))
     app.logger.info('Completed batch prediction: {}'.format(time.strftime("%A, %d. %B %Y %I:%M:%S %p")))
 
 
-# In debug mode, Flask's reloader will load the flask app twice. Scheduler will run in both master and child thread.
-# A workaround is to not start scheduler in master process
+# In debug mode, Flask's reloader will load the flask app twice. Scheduler will run in both master process and child
+# thread. A workaround is to not start scheduler in master process
 if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=refresh_data, trigger='cron', minute=30)

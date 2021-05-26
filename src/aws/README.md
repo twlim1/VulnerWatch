@@ -55,7 +55,7 @@ Run the following commands to populate a database, tables and test data
 ./containermanage.sh connect dba
 python dba_scripts/db_init.py
 python dba_scripts/data_download_cve.py --test_mode
-python dba_scripts/batch_prediction.py
+python dba_scripts/batch_prediction.py --use_gpu
 ```
 - To predict severity of cyber security threat from user input description
 ```
