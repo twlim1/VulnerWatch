@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{%- block content -%}
+
+<div id="explore_main">
+
+{# User controls #}
+<div>
+    <select id="output_size_select" class="form-select" onchange=populateData()>
+        <option selected>10</option>
+        <option>25</option>
+        <option>50</option>
+    </select>
+</div>
+
+{# Main table #}
+<div id="output_table_div">
+    <table id="output_table" class="table table-striped">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+</div>
+
+<!-- ==================== JS ==================== -->
+<script>
+    /**************
+     * JS GLOBALS *
+     **************/
+    var default_columns = [
+        'cve_id',
+        'published_date',
+        'v3_base_score',
+        'confidence',
+        'model',
+        'description',
+    ];
+    var current_columns = default_columns.slice(); // make copy
+
+    var table_width = 0;
+    var table_height = 0;
+
+    /****************
+     * JS FUNCTIONS *
+     ****************/
+
+    /* Returns the desired number of records from queries */
+    function getOutputSize() {
+        let ele = document.getElementById("output_size_select");
+        if (ele) {
+            return ele.value;
+        } else {
+            return 25;
+        }
+    }
+
+    /* Returns a list of columns as the API expects */
+    function getColumns() {
+        return JSON.stringify(current_columns);
+    }
+
+    /* Sends POST request to our API */
+    function makeCVERequest(text) {
+        let req = new XMLHttpRequest();
+        let url = 'getcves';
+        let params = `text=${text}`;
+
+        req.open('POST', url, true); // true == asynchronous
+        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        req.onreadystatechange = function() {
+            if (req.readyState == 4 && req.status == 200) {
+                loadTable(req.responseText);
+            }
+        }
+        req.send(params);
+    }
+
+    /* Top-level function for reading data into the main table */
+    function populateData() {
+        let queryinfo = new Object();
+        queryinfo.cols = getColumns();
+        queryinfo.size = getOutputSize();
+
+        makeCVERequest(JSON.stringify(queryinfo));
+    }
+
+    /* Responsible for sizing the main table */
+    function resizeTable(width, height) {
+
+        let tbl = document.getElementById('output_table');
+        let tbody = tbl.children[1];
+
+        /* Add or delete rows, while keeping the header intact */
+        while (true) {
+            tbl_height = tbody.childElementCount;
+
+            if (tbl_height < height) {
+                tbody.insertRow();
+            } else if (tbl_height > height) {
+                tbody.deleteRow(-1);
+            } else {
+                break;
+            }
+        }
+
+        /* Add or delete columns */
+        for (row of tbody.children) {
+            while (true) {
+                row_width = row.childElementCount;
+
+                if (row_width < width) {
+                    row.insertCell();
+                } else if (row_width > width) {
+                    row.deleteCell(-1);
+                } else {
+                    break;
+                }
+            }
+        }
+
+        /* Update globals */
+        table_width = width;
+        table_height = height;
+    }
+
+    function loadTable(inputData) {
+        let data = JSON.parse(inputData);
+        resizeTable(data[0].length, data.length);
+
+        let tbl = document.getElementById('output_table');
+        let tbody = tbl.children[1];
+
+        for (let i=0; i<data.length; i++) {
+            let row = tbody.children[i];
+
+            for (let j=0; j<data[i].length; j++) {
+                row.children[j].textContent = data[i][j];
+            }
+        }
+    }
+
+    /* This function only runs on page load and assumes the table is empty */
+    function createHeader() {
+        let tbl = document.getElementById('output_table');
+        let header = tbl.children[0];
+
+        let headerRow = document.createElement('tr');
+
+        for (let i=0; i<current_columns.length; i++) {
+            let th = document.createElement('th')
+            th.textContent = current_columns[i];
+
+            headerRow.appendChild(th);
+        }
+
+        header.appendChild(headerRow);
+    }
+
+    function pageInit() {
+        createHeader();
+        populateData();
+    }
+
+    window.onload = pageInit;
+</script>
+
+{%- endblock -%}

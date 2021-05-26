@@ -7,3 +7,12 @@
   color: #dd3333;
   font-family: "Fira Sans", sans-serif;
 }
+
+#explore_main {
+    width: 70%;
+    margin: 0 auto;
+}
+
+#output_size_select {
+    max-width: 80px;
+}

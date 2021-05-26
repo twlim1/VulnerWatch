@@ -76,7 +76,7 @@
     /* Sends text to our api */
     function makeApiRequest(text) {
         let req = new XMLHttpRequest();
-        let url = 'api';
+        let url = 'getprediction';
         let params = `text=${text}`;
 
         req.open('POST', url, true); // true == asynchronous 
