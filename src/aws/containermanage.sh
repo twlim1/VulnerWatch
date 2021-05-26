@@ -237,7 +237,9 @@ run_db_container() {
 }
 
 run_dba_container() {
-    docker run --name "$DBA_CONTAINER" -p 81:81 -d --gpus all -v $DBA_MODELS:/models --net host "$DBA_CONTAINER"
+    # Use the following command if GPU is available:
+    # docker run --name "$DBA_CONTAINER" -p 81:81 -d --gpus all -v $DBA_MODELS:/models --net host "$DBA_CONTAINER"
+    docker run --name "$DBA_CONTAINER" -p 81:81 -d -v $DBA_MODELS:/models --net host "$DBA_CONTAINER"
 }
 
 run_containers() {

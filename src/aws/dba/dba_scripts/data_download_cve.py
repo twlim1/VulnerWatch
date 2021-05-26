@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
     # Sample code to sync from specific time
     if test_mode:
-        last_refresh_timestamp = datetime.strptime('2021-05-19', '%Y-%m-%d')
+        last_refresh_timestamp = datetime.strptime('2021-05-25', '%Y-%m-%d')
     new_cve = scrap_cve(sleep_duration=1, start_date=last_refresh_timestamp)
     for cve in new_cve:
         db.insert_cve(cve)
