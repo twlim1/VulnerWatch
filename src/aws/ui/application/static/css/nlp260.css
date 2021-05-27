@@ -9,10 +9,27 @@
 }
 
 #explore_main {
-    width: 70%;
-    margin: 0 auto;
+    width: 90%;
+    margin: 0% 5% 0% 3%;
 }
 
 #output_size_select {
-    max-width: 80px;
+    width: min-content;
+}
+
+#order_by_select {
+    width: min-content;
+}
+
+#order_dir_select {
+    width: min-content;
+}
+
+#user_controls {
+    width: 200px;
+    float: left;
+}
+
+#output_table_div {
+    margin-left: 200px;
 }

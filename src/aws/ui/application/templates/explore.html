@@ -4,17 +4,32 @@
 <div id="explore_main">
 
 {# User controls #}
-<div>
+<div id="user_controls">
+    <label for="output_size_select">Records per Page:</label>
     <select id="output_size_select" class="form-select" onchange=populateData()>
         <option selected>10</option>
         <option>25</option>
         <option>50</option>
     </select>
+
+    <br/>
+
+    <label for="order_by_select">Order By:</label>
+    <select id="order_by_select" class="form-select" onchange=populateData()>
+        <option>cve_id</option>
+        <option selected>published_date</option>
+        <option>v3_base_score</option>
+    </select>
+
+    <select id="order_dir_select" class="form-select" onchange=populateData()>
+        <option selected>Descending</option>
+        <option>Ascending</option>
+    </select>
 </div>
 
 {# Main table #}
 <div id="output_table_div">
-    <table id="output_table" class="table table-striped">
+    <table id="output_table" class="table table-striped table-bordered">
         <thead></thead>
         <tbody></tbody>
     </table>
@@ -27,6 +42,8 @@
     /**************
      * JS GLOBALS *
      **************/
+
+    /* list of columns in our backend that we will interact with */
     var default_columns = [
         'cve_id',
         'published_date',
@@ -35,23 +52,33 @@
         'model',
         'description',
     ];
-    var current_columns = default_columns.slice(); // make copy
 
-    var table_width = 0;
-    var table_height = 0;
+    /* list of columns that we will use to create sorting options */
+    var sortable_columns = [];
+    for (let i=0; i<document.getElementById('order_by_select').children.length; i++) {
+        sortable_columns[i] = document.getElementById('order_by_select').children[i].value;
+    }
+
+    var current_columns = default_columns.slice(); // make copy
 
     /****************
      * JS FUNCTIONS *
      ****************/
 
-    /* Returns the desired number of records from queries */
-    function getOutputSize() {
-        let ele = document.getElementById("output_size_select");
-        if (ele) {
-            return ele.value;
-        } else {
-            return 25;
+    function getDisplayName(column) {
+        switch (column) {
+            case 'cve_id':          return 'CVE'; break;
+            case 'published_date':  return 'Publish Date'; break;
+            case 'v3_base_score':   return 'CVSS V3'; break;
+            case 'confidence':      return 'Confidence'; break;
+            case 'model':           return 'Model'; break;
+            case 'description':     return 'Description'; break;
         }
+        return column;
+    }
+
+    function getCVELink(cve) {
+        return 'https://nvd.nist.gov/vuln/detail/' + cve;
     }
 
     /* Returns a list of columns as the API expects */
@@ -59,7 +86,20 @@
         return JSON.stringify(current_columns);
     }
 
-    /* Sends POST request to our API */
+    /* Returns the desired number of records per query */
+    function getOutputSize() {
+        return document.getElementById("output_size_select").value;
+    }
+
+    function getOrderBy() {
+        return document.getElementById("order_by_select").value;
+    }
+
+    function getOrderDirection() {
+        return document.getElementById("order_dir_select").value;
+    }
+
+    /* Sends POST to our API */
     function makeCVERequest(text) {
         let req = new XMLHttpRequest();
         let url = 'getcves';
@@ -81,6 +121,8 @@
         let queryinfo = new Object();
         queryinfo.cols = getColumns();
         queryinfo.size = getOutputSize();
+        queryinfo.order_by = getOrderBy();
+        queryinfo.order_dir = getOrderDirection();
 
         makeCVERequest(JSON.stringify(queryinfo));
     }
@@ -91,7 +133,7 @@
         let tbl = document.getElementById('output_table');
         let tbody = tbl.children[1];
 
-        /* Add or delete rows, while keeping the header intact */
+        /* Add or delete rows */
         while (true) {
             tbl_height = tbody.childElementCount;
 
@@ -118,24 +160,41 @@
                 }
             }
         }
-
-        /* Update globals */
-        table_width = width;
-        table_height = height;
     }
 
     function loadTable(inputData) {
-        let data = JSON.parse(inputData);
+        let data;
+        try {
+            data = JSON.parse(inputData);
+        } catch (e) {
+            // This is one way internal errors are reported...
+            console.error(inputData);
+            return;
+        }
         resizeTable(data[0].length, data.length);
 
         let tbl = document.getElementById('output_table');
         let tbody = tbl.children[1];
 
+        let cve_col = current_columns.indexOf('cve_id');
+
+        /* Populate data in an NxM fashion */
         for (let i=0; i<data.length; i++) {
             let row = tbody.children[i];
 
             for (let j=0; j<data[i].length; j++) {
-                row.children[j].textContent = data[i][j];
+                let cell = row.children[j];
+
+                if (j === cve_col) {
+                    let a = cell.getElementsByTagName('a')[0];
+                    if (!a) { a = document.createElement('a'); }
+
+                    a['href'] = getCVELink(data[i][j]);
+                    a['text'] = data[i][j];
+                    cell.appendChild(a);
+                } else {
+                    cell.textContent = data[i][j];
+                }
             }
         }
     }
@@ -149,7 +208,7 @@
 
         for (let i=0; i<current_columns.length; i++) {
             let th = document.createElement('th')
-            th.textContent = current_columns[i];
+            th.textContent = getDisplayName(current_columns[i]);
 
             headerRow.appendChild(th);
         }

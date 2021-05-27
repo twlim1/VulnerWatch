@@ -45,6 +45,9 @@ def cves():
     except:
         return '{"Error": "Bad input"}'
 
+    #
+    # Column option
+    #
     if 'cols' in inputJson:
         cols = inputJson['cols']
         if isinstance(cols, str):
@@ -54,13 +57,30 @@ def cves():
         # Select all columns
         cols = ['*']
 
+    #
+    # Output size option
+    #
     size = inputJson.get('size', 25)
 
     if int(size) > MAX_OUTPUT_SIZE:
         size = str(MAX_OUTPUT_SIZE)
 
+    #
+    # Output ordering options
+    #
+    order_by = inputJson.get('order_by', None)
+    order_dir = inputJson.get('order_dir', 'DESC')
+
+    if order_dir.lower() == 'ascending':
+        order_dir = 'ASC'
+    if order_dir.lower() == 'descending':
+        order_dir = 'DESC'
+
     # Hit the database
-    results = cve_query(cols, size)
+    try:
+        results = cve_query(cols, size, order_by, order_dir)
+    except Exception as e:
+        return repr(e)
 
     return json.dumps(results)
 
@@ -68,15 +88,17 @@ def cves():
 # INTERNAL APIS
 #
 
-def cve_query(columns, num_results):
-    # Make cve_id column unambiguous
+def cve_query(columns, num_results, order_by, order_dir):
+    # Make cve_id column unambiguous for the SELECT
     try:
         idx = columns.index('cve_id')
         columns[idx] = 'CVEs.cve_id'
     except ValueError:
         pass # user is not selecting this column
 
-    # JSON can't serialize date types so we cast here
+    #
+    # JSON can't serialize date types so we cast here.
+    #
     for date_col in ['published_date']:
         try:
             idx = columns.index(date_col)
@@ -84,7 +106,9 @@ def cve_query(columns, num_results):
         except ValueError:
             pass # user is not selecting this column
 
+    #
     # Make sure NULL values are displayed
+    #
     for not_null_col, replacement in [('confidence', 'N/A')]:
         try:
             idx = columns.index(not_null_col)
@@ -92,12 +116,27 @@ def cve_query(columns, num_results):
         except ValueError:
             pass # user is not selecting this column
 
+    #
+    # String all columns together
+    #
     column_str = ', '.join(columns)
+
+    #
+    # Generate an "ORDER BY" string
+    #
+    if order_by:
+        if order_by == 'cve_id':
+            order_by = 'CVEs.cve_id'
+
+        order_by_str = f'ORDER BY {order_by} {order_dir}'
+    else:
+        order_by_str = ''
 
     query = f'''
         SELECT {column_str}
         FROM CVEs, Scores
         WHERE CVEs.cve_id = Scores.cve_id
+        {order_by_str}
         LIMIT {num_results}
     '''
 
