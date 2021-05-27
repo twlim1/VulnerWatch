@@ -27,12 +27,12 @@ def scrap_cve(start_page=0, total_page=1000, page_size=1000, sleep_duration=3, s
     if start_date:
         # CVE modified date has lowest granularity in minute.
         # Add one second to get the next CVE since last update
-        start_date = start_date.strftime('%Y-%m-%dT%H:%M:01:000 UTC-05:00')
+        start_date = start_date.strftime('%Y-%m-%dT%H:%M:01:000 UTC-00:00')
         print('Start Date: {}'.format(start_date))
 
     cve_items = list()
     for page_no in range(start_page, total_page):
-        for _ in range(5):
+        for _ in range(3):
             try:
                 print('Retrieving page: {}'.format(page_no + 1))
                 url = '{}?startIndex={}&resultsPerPage={}'.format(BASE_URL, page_no * page_size, page_size)
@@ -87,13 +87,13 @@ if __name__ == '__main__':
     # CVE timestamp is Eastern timezone
     row = db.query_metadata()
     last_refresh_timestamp = row[0][0] if row and row[0] else None
-    print('Last refresh: {} EST'.format(last_refresh_timestamp))
-    curr_refresh_timestamp = datetime.now(tz=timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M:00-05')
-    print('Current refresh: {} EST'.format(curr_refresh_timestamp))
+    print('Last refresh: {} UTC'.format(last_refresh_timestamp))
+    curr_refresh_timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:00')
+    print('Current refresh: {} UTC'.format(curr_refresh_timestamp))
 
     # Sample code to sync from specific time
     if test_mode:
-        last_refresh_timestamp = datetime.strptime('2021-05-25', '%Y-%m-%d')
+        last_refresh_timestamp = datetime.strptime('2021-05-26T12:30Z', '%Y-%m-%dT%H:%MZ')
     new_cve = scrap_cve(sleep_duration=1, start_date=last_refresh_timestamp)
     for cve in new_cve:
         db.insert_cve(cve)
