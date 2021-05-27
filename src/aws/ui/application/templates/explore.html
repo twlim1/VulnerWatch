@@ -3,10 +3,25 @@
 
 <div id="explore_main">
 
+{# Box for showing messages #}
+<span id="inputNotificationZone" class="shift_right"></span>
+
+{# Search bar #}
+<div id="search_div">
+    <label for="search_box">Text search:</label>
+    <input type="text" id="search_box" onchange="resetPageNum();populateData()">
+</div>
+
 {# User controls #}
 <div id="user_controls">
-    <label for="output_size_select">Records per Page:</label>
-    <select id="output_size_select" class="form-select" onchange=populateData()>
+    <label for="page_num">Results Page #:</label>
+    <input type="number" id="page_num" min="1" max="1000" value="1" onchange="populateData()">
+
+    <br/>
+    <br/>
+
+    <label for="output_size_select">Results per Page:</label>
+    <select id="output_size_select" class="form-select" onchange="resetPageNum();populateData()">
         <option selected>10</option>
         <option>25</option>
         <option>50</option>
@@ -15,13 +30,13 @@
     <br/>
 
     <label for="order_by_select">Order By:</label>
-    <select id="order_by_select" class="form-select" onchange=populateData()>
+    <select id="order_by_select" class="form-select" onchange="resetPageNum();populateData()">
         <option>cve_id</option>
         <option selected>published_date</option>
         <option>v3_base_score</option>
     </select>
 
-    <select id="order_dir_select" class="form-select" onchange=populateData()>
+    <select id="order_dir_select" class="form-select" onchange="resetPageNum();populateData()">
         <option selected>Descending</option>
         <option>Ascending</option>
     </select>
@@ -61,9 +76,38 @@
 
     var current_columns = default_columns.slice(); // make copy
 
+    var default_page_num = '1';
+
     /****************
      * JS FUNCTIONS *
      ****************/
+
+    function msgUser(text) {
+        let ele = document.getElementById('inputNotificationZone');
+        ele.style.opacity = 1;
+        ele.textContent = text;
+
+        setTimeout(clearMsg, 5000);
+    }
+
+    /* Fades out the box that displays messages */
+    function clearMsg() {
+        let ele = document.getElementById('inputNotificationZone');
+
+        let timerId = setInterval(function() {
+            var opacity = ele.style.opacity;
+
+            /* last iteration */
+            if (opacity <= 0) {
+                clearInterval(timerId);
+                ele.textContent = '';
+
+            /* most iterations */
+            } else {
+                ele.style.opacity = opacity - 0.03;
+            }
+        }, 50);
+    }
 
     function getDisplayName(column) {
         switch (column) {
@@ -99,6 +143,22 @@
         return document.getElementById("order_dir_select").value;
     }
 
+    function getSearchText() {
+        return document.getElementById("search_box").value;
+    }
+
+    /* Returns the OFFSET value sent to postgres */
+    function getOffset() {
+        let page_num = Number(document.getElementById("page_num").value);
+        let size = Number(getOutputSize());
+        return (page_num - 1) * size;
+    }
+
+    function resetPageNum() {
+        let ele = document.getElementById("page_num");
+        ele.value = default_page_num;
+    }
+
     /* Sends POST to our API */
     function makeCVERequest(text) {
         let req = new XMLHttpRequest();
@@ -123,6 +183,8 @@
         queryinfo.size = getOutputSize();
         queryinfo.order_by = getOrderBy();
         queryinfo.order_dir = getOrderDirection();
+        queryinfo.offset = getOffset();
+        queryinfo.search = getSearchText();
 
         makeCVERequest(JSON.stringify(queryinfo));
     }
@@ -164,6 +226,7 @@
 
     function loadTable(inputData) {
         let data;
+        /* Handle invalid data given to us */
         try {
             data = JSON.parse(inputData);
         } catch (e) {
@@ -171,6 +234,14 @@
             console.error(inputData);
             return;
         }
+
+        /* Handle empty data given to us */
+        if (data.length === 0) {
+            resizeTable(0, 0);
+            msgUser('No results');
+            return;
+        }
+
         resizeTable(data[0].length, data.length);
 
         let tbl = document.getElementById('output_table');

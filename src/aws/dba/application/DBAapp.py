@@ -76,9 +76,20 @@ def cves():
     if order_dir.lower() == 'descending':
         order_dir = 'DESC'
 
+    #
+    # Output offset option
+    #
+    offset = inputJson.get('offset', '0')
+
+    #
+    # Search string option
+    #
+    search = inputJson.get('search', '').replace(' ', '%')
+    search = f"'%{search}%'"
+
     # Hit the database
     try:
-        results = cve_query(cols, size, order_by, order_dir)
+        results = cve_query(cols, size, order_by, order_dir, offset, search)
     except Exception as e:
         return repr(e)
 
@@ -88,17 +99,17 @@ def cves():
 # INTERNAL APIS
 #
 
-def cve_query(columns, num_results, order_by, order_dir):
-    # Make cve_id column unambiguous for the SELECT
+def cve_query(columns, num_results, order_by, order_dir, offset, search):
+    #
+    # Columns: First, make cve_id column unambiguous for the SELECT
+    #
     try:
         idx = columns.index('cve_id')
         columns[idx] = 'CVEs.cve_id'
     except ValueError:
         pass # user is not selecting this column
 
-    #
     # JSON can't serialize date types so we cast here.
-    #
     for date_col in ['published_date']:
         try:
             idx = columns.index(date_col)
@@ -106,9 +117,7 @@ def cve_query(columns, num_results, order_by, order_dir):
         except ValueError:
             pass # user is not selecting this column
 
-    #
     # Make sure NULL values are displayed
-    #
     for not_null_col, replacement in [('confidence', 'N/A')]:
         try:
             idx = columns.index(not_null_col)
@@ -116,28 +125,42 @@ def cve_query(columns, num_results, order_by, order_dir):
         except ValueError:
             pass # user is not selecting this column
 
-    #
     # String all columns together
-    #
     column_str = ', '.join(columns)
 
     #
     # Generate an "ORDER BY" string
     #
-    if order_by:
+    if not order_by:
+        order_by_str = ''
+    else:
         if order_by == 'cve_id':
             order_by = 'CVEs.cve_id'
 
         order_by_str = f'ORDER BY {order_by} {order_dir}'
+
+    #
+    # Generate a text search string first (needs to happen before columns are modified)
+    #
+    if not search:
+        search_str = ''
     else:
-        order_by_str = ''
+        search_str = f'''
+            AND
+            (
+                CVEs.cve_id LIKE {search} 
+                OR
+                description LIKE {search} 
+            )
+        '''
 
     query = f'''
         SELECT {column_str}
         FROM CVEs, Scores
         WHERE CVEs.cve_id = Scores.cve_id
+        {search_str}
         {order_by_str}
-        LIMIT {num_results}
+        LIMIT {num_results} OFFSET {offset}
     '''
 
     return du.run_raw_query(query, output=True)
