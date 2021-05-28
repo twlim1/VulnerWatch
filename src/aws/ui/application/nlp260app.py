@@ -32,8 +32,8 @@ def getPrediction():
     res = requests.post(url, data={'text': inputText})
     try:
         res.raise_for_status()
-    except:
-        return 'Internal Error' # TODO: improve error handling/messaging
+    except Exception as e:
+        return repr(e)
 
     return res.text
 
@@ -51,7 +51,7 @@ def getCVES():
     res = requests.post(url, data={'text': inputText})
     try:
         res.raise_for_status()
-    except:
-        return 'Internal Error' # TODO: improve error handling/messaging
+    except Exception as e:
+        return repr(e)
 
     return res.text

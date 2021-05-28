@@ -11,7 +11,7 @@
     <div style="line-height:50%;"><br></div>
 
     <div>
-        <button id="inputButton" type="button" class="button button-md radius-10">Annotate</button>
+        <button id="inputButton" type="button" class="button button-md radius-10">Evaluate</button>
         <span>&nbsp;&nbsp;&nbsp;</span>
         <span id="inputNotificationZone"></span>
     </div>
@@ -19,8 +19,8 @@
     <div style="line-height:200%;"><br></div>
 
     <div id="sandboxOutput" class="form-group shadow-textarea">
-        <h5><label for="outputTextarea">API Output:</label></h5>
-        <textarea class="form-control z-depth-1" id="outputTextarea" rows="3" readonly></textarea>
+        <h5><label for="outputTextarea">Output:</label></h5>
+        <p class="form-control z-depth-1" id="outputTextarea" rows="3" readonly></p>
     </div>
 </div>
 
@@ -84,15 +84,75 @@
 
         req.onreadystatechange = function() { 
             if (req.readyState == 4 && req.status == 200) {
-                showResponse(req.responseText);
+                processResponse(req.responseText);
             }
         }
         req.send(params);
     }
 
+    function convertOutput(data, key) {
+        if (key === 'pred_av') {
+                 if (data[key] === 0) { return 'Network'; }
+            else if (data[key] === 1) { return 'Adjacent Network'; }
+            else if (data[key] === 2) { return 'Local'; }
+            else if (data[key] === 3) { return 'Physical'; }
+            else { return 'Unknown'; }
+
+        } else if (key === 'pred_ac') {
+                 if (data[key] === 0) { return 'Low'; }
+            else if (data[key] === 1) { return 'High'; }
+            else { return 'Unknown'; }
+
+        } else if (key === 'pred_ui') {
+                 if (data[key] === 0) { return 'None'; }
+            else if (data[key] === 1) { return 'Required'; }
+            else { return 'Unknown'; }
+
+        } else if (key === 'pred_sc') {
+                 if (data[key] === 0) { return 'Unchanged'; }
+            else if (data[key] === 1) { return 'Changed'; }
+            else { return 'Unknown'; }
+
+        } else if (key === 'pred_pr'  ||
+                   key === 'pred_ci'  ||
+                   key === 'pred_ii'  ||
+                   key === 'pred_ai') {
+                 if (data[key] === 0) { return 'None'; }
+            else if (data[key] === 1) { return 'Low'; }
+            else if (data[key] === 2) { return 'High'; }
+            else { return 'Unknown'; }
+        }
+    }
+
     /* Update text box */
     function showResponse(text) {
-        document.getElementById('outputTextarea').value = text;
+        document.getElementById('outputTextarea').innerHTML = text;
+    }
+
+    function processResponse(text) {
+        let output;
+        try {
+            output = JSON.parse(text);
+        }
+        catch (e) {
+            showResponse('Could not parse:<br>' + text);
+            return;
+        }
+
+        let disp_html = '<strong>CVSS Base Score:</strong> ' + output['score_b'] + '<br><br>';
+
+        disp_html += '<strong>Attack Vector:</strong> '         + convertOutput(output, 'pred_av') + '<br>';
+        disp_html += '<strong>Attack Complexity:</strong> '     + convertOutput(output, 'pred_ac') + '<br>';
+        disp_html += '<strong>Privileges Required:</strong> '   + convertOutput(output, 'pred_pr') + '<br>';
+        disp_html += '<strong>User Interaction:</strong> '      + convertOutput(output, 'pred_ui') + '<br>';
+        disp_html += '<strong>Scope:</strong> '                 + convertOutput(output, 'pred_sc') + '<br>';
+        disp_html += '<strong>Confidentiality Impact:</strong> '+ convertOutput(output, 'pred_ci') + '<br>';
+        disp_html += '<strong>Integrity Impact:</strong> '      + convertOutput(output, 'pred_ii') + '<br>';
+        disp_html += '<strong>Availablity Impact:</strong> '    + convertOutput(output, 'pred_ai') + '<br><br>';
+
+        disp_html += '<strong>Mean Confidence:</strong> ' + Number(output['mean_conf']).toFixed(2) + '<br>';
+
+        showResponse(disp_html);
     }
 </script>
 

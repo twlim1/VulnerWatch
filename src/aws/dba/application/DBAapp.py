@@ -28,14 +28,17 @@ def predict():
         return 'Bad input'
 
     scores, metrics, confidences = Predictor.predict(description)
-    score_b, score_i, score_e = scores
-    pred_av, pred_ac, pred_pr, pred_ui, pred_sc, pred_ci, pred_ii, pred_ai = metrics
-    conf_av, conf_ac, conf_pr, conf_ui, conf_sc, conf_ci, conf_ii, conf_ai = confidences
 
-    print('  Mean: {:.4f}'.format(sum(confidences) / len(confidences)))
-    print('  Max : {:.4f}'.format(max(confidences)))
-    print('  Min : {:.4f}'.format(min(confidences)))
-    return f'{scores}\n{metrics}\n{confidences}'
+    r = {}
+    r['score_b'], r['score_i'], r['score_e'] = scores
+    r['pred_av'], r['pred_ac'], r['pred_pr'], r['pred_ui'], r['pred_sc'], r['pred_ci'], r['pred_ii'], r['pred_ai'] = [float(m) for m in metrics]
+    r['conf_av'], r['conf_ac'], r['conf_pr'], r['conf_ui'], r['conf_sc'], r['conf_ci'], r['conf_ii'], r['conf_ai'] = confidences
+
+    r['mean_conf'] = sum(confidences) / len(confidences)
+    r['max_conf'] = max(confidences)
+    r['min_conf'] = min(confidences)
+
+    return json.dumps(r)
 
 @app.route('/cves', methods=['POST'])
 def cves():
