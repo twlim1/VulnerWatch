@@ -44,3 +44,14 @@
 .shift_right {
     margin-left: 40%;
 }
+
+/* used to override CSS inherited from btn classes */
+.disable_events {
+    pointer-events: none;
+}
+
+/* make outputs fill up their cells */
+#sandbox_output_table td div {
+    width: 100%;
+}
+

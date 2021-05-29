@@ -13,5 +13,6 @@ if [[ "$(whoami)" != "root" ]]; then
     export FLASK_ENV=development
     python -m flask run
 else
+    export FLASK_ENV=development
     python -m flask run -h 0.0.0.0 -p 80
 fi
