@@ -20,6 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--db_pass', default='vulnerwatch')
     parser.add_argument('--db_host', default='localhost')
     parser.add_argument('--db_port', default='5432')
+    parser.add_argument('--use_gpu', dest='use_gpu', action='store_true')
     params = parser.parse_args()
 
     model_path = params.model_path
@@ -29,6 +30,7 @@ if __name__ == '__main__':
     db_pass = params.db_pass
     db_host = params.db_host
     db_port = params.db_port
+    use_gpu = params.use_gpu
 
     print('*' * 50)
     print('Model path: {}'.format(model_path))
@@ -38,9 +40,10 @@ if __name__ == '__main__':
     print('Database pass: {}'.format(db_pass))
     print('Database host: {}'.format(db_host))
     print('Database port: {}'.format(db_port))
+    print('Use GPU if available: {}'.format(use_gpu))
     print('*' * 50)
 
-    cvss = CVSS(model_path=model_path)
+    cvss = CVSS(model_path=model_path, use_gpu=use_gpu)
     db = DatabaseUtil(dbname=db_name, user=db_user, password=db_pass, host=db_host, port=db_port, enable_log=True)
     records = db.query_cves_without_score()
     print('CVEs to predict: {}'.format(len(records)))
