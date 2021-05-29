@@ -36,3 +36,6 @@
 7. models/semantic_similarity.ipynb
 * Notebook to find the CVE description that most similar to the input text by the user
 * Code is not use in final project. It could be useful for future enhancement
+
+8. models/createModels.ipynb
+* Notebook that takes params to train all 8 models using models.py module
