@@ -27,3 +27,9 @@ Temporary Items
 .apdisk
 .ipynb_checkpoints
 __pycache__
+
+# Virtual env
+venv
+
+# Local files
+local

@@ -60,7 +60,7 @@ python dba_scripts/batch_prediction.py
 # if GPU is exposed to dba container (see containermanage.sh comment to enable gpu)
 python dba_scripts/batch_prediction.py --use_gpu
 ```
-- To predict severity of cyber security threat from user input description
+- To predict severity of cybersecurity threat from user input description
 ```
 ./containermanage.sh connect dba
 python dba_scripts/single_prediction.py --description "A flaw was found in libwebp in versions before ..."
