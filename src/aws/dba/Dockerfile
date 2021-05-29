@@ -15,7 +15,6 @@ RUN echo 'set -o vi' >> /root/.bashrc
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Copy local files
-COPY models /models
 COPY dba_scripts /dba_scripts
 COPY application /application
 

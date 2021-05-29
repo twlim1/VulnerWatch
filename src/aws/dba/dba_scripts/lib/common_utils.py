@@ -129,7 +129,7 @@ class BaseScore:
 
 
 class CVSS:
-    def __init__(self, model_path, enable_print=True):
+    def __init__(self, model_path, enable_print=True, use_gpu=True):
         av_path = os.path.join(model_path, 'AV')
         ac_path = os.path.join(model_path, 'AC')
         ui_path = os.path.join(model_path, 'UI')
@@ -141,7 +141,7 @@ class CVSS:
 
         self.enabled = enable_print
         self.scorer = BaseScore()
-        self.device = self.get_device()
+        self.device = self.get_device(use_gpu=use_gpu)
 
         self.av_tokenizer, self.av_model = self.load_model(av_path)
         self.ac_tokenizer, self.ac_model = self.load_model(ac_path)
@@ -153,9 +153,9 @@ class CVSS:
         self.ai_tokenizer, self.ai_model = self.load_model(ai_path)
 
     @staticmethod
-    def get_device():
+    def get_device(use_gpu):
         # If there's a GPU available...
-        if torch.cuda.is_available():
+        if use_gpu and torch.cuda.is_available():
             # Tell PyTorch to use the GPU.
             device = torch.device('cuda')
             print('There are %d GPU(s) available.' % torch.cuda.device_count())
