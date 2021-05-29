@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{%- block content -%}
+
+<div id="explore_main">
+
+{# Box for showing messages #}
+<span id="inputNotificationZone" class="shift_right"></span>
+
+{# Search bar #}
+<div id="search_div">
+    <label for="search_box">Text search:</label>
+    <input type="text" id="search_box" onchange="resetPageNum();populateData()">
+</div>
+
+{# User controls #}
+<div id="user_controls">
+    <label for="page_num">Results Page #:</label>
+    <input type="number" id="page_num" min="1" max="1000" value="1" onchange="populateData()">
+
+    <br/>
+    <br/>
+
+    <label for="output_size_select">Results per Page:</label>
+    <select id="output_size_select" class="form-select" onchange="resetPageNum();populateData()">
+        <option selected>10</option>
+        <option>25</option>
+        <option>50</option>
+    </select>
+
+    <br/>
+
+    <label for="order_by_select">Order By:</label>
+    <select id="order_by_select" class="form-select" onchange="resetPageNum();populateData()">
+        <option>cve_id</option>
+        <option selected>published_date</option>
+        <option>v3_base_score</option>
+    </select>
+
+    <select id="order_dir_select" class="form-select" onchange="resetPageNum();populateData()">
+        <option selected>Descending</option>
+        <option>Ascending</option>
+    </select>
+</div>
+
+{# Main table #}
+<div id="output_table_div">
+    <table id="output_table" class="table table-striped table-bordered">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+</div>
+
+<!-- ==================== JS ==================== -->
+<script>
+    /**************
+     * JS GLOBALS *
+     **************/
+
+    /* list of columns in our backend that we will interact with */
+    var default_columns = [
+        'cve_id',
+        'published_date',
+        'v3_base_score',
+        'confidence',
+        'model',
+        'description',
+    ];
+
+    /* list of columns that we will use to create sorting options */
+    var sortable_columns = [];
+    for (let i=0; i<document.getElementById('order_by_select').children.length; i++) {
+        sortable_columns[i] = document.getElementById('order_by_select').children[i].value;
+    }
+
+    var current_columns = default_columns.slice(); // make copy
+
+    var default_page_num = '1';
+
+    /****************
+     * JS FUNCTIONS *
+     ****************/
+
+    function msgUser(text) {
+        let ele = document.getElementById('inputNotificationZone');
+        ele.style.opacity = 1;
+        ele.textContent = text;
+
+        setTimeout(clearMsg, 5000);
+    }
+
+    /* Fades out the box that displays messages */
+    function clearMsg() {
+        let ele = document.getElementById('inputNotificationZone');
+
+        let timerId = setInterval(function() {
+            var opacity = ele.style.opacity;
+
+            /* last iteration */
+            if (opacity <= 0) {
+                clearInterval(timerId);
+                ele.textContent = '';
+
+            /* most iterations */
+            } else {
+                ele.style.opacity = opacity - 0.03;
+            }
+        }, 50);
+    }
+
+    function getDisplayName(column) {
+        switch (column) {
+            case 'cve_id':          return 'CVE'; break;
+            case 'published_date':  return 'Publish Date'; break;
+            case 'v3_base_score':   return 'CVSS V3'; break;
+            case 'confidence':      return 'Confidence'; break;
+            case 'model':           return 'Model'; break;
+            case 'description':     return 'Description'; break;
+        }
+        return column;
+    }
+
+    function getCVELink(cve) {
+        return 'https://nvd.nist.gov/vuln/detail/' + cve;
+    }
+
+    /* Returns a list of columns as the API expects */
+    function getColumns() {
+        return JSON.stringify(current_columns);
+    }
+
+    /* Returns the desired number of records per query */
+    function getOutputSize() {
+        return document.getElementById("output_size_select").value;
+    }
+
+    function getOrderBy() {
+        return document.getElementById("order_by_select").value;
+    }
+
+    function getOrderDirection() {
+        return document.getElementById("order_dir_select").value;
+    }
+
+    function getSearchText() {
+        return document.getElementById("search_box").value;
+    }
+
+    /* Returns the OFFSET value sent to postgres */
+    function getOffset() {
+        let page_num = Number(document.getElementById("page_num").value);
+        let size = Number(getOutputSize());
+        return (page_num - 1) * size;
+    }
+
+    function resetPageNum() {
+        let ele = document.getElementById("page_num");
+        ele.value = default_page_num;
+    }
+
+    /* Sends POST to our API */
+    function makeCVERequest(text) {
+        let req = new XMLHttpRequest();
+        let url = 'getcves';
+        let params = `text=${text}`;
+
+        req.open('POST', url, true); // true == asynchronous
+        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        req.onreadystatechange = function() {
+            if (req.readyState == 4 && req.status == 200) {
+                loadTable(req.responseText);
+            }
+        }
+        req.send(params);
+    }
+
+    /* Top-level function for reading data into the main table */
+    function populateData() {
+        let queryinfo = new Object();
+        queryinfo.cols = getColumns();
+        queryinfo.size = getOutputSize();
+        queryinfo.order_by = getOrderBy();
+        queryinfo.order_dir = getOrderDirection();
+        queryinfo.offset = getOffset();
+        queryinfo.search = getSearchText();
+
+        makeCVERequest(JSON.stringify(queryinfo));
+    }
+
+    /* Responsible for sizing the main table */
+    function resizeTable(width, height) {
+
+        let tbl = document.getElementById('output_table');
+        let tbody = tbl.children[1];
+
+        /* Add or delete rows */
+        while (true) {
+            tbl_height = tbody.childElementCount;
+
+            if (tbl_height < height) {
+                tbody.insertRow();
+            } else if (tbl_height > height) {
+                tbody.deleteRow(-1);
+            } else {
+                break;
+            }
+        }
+
+        /* Add or delete columns */
+        for (row of tbody.children) {
+            while (true) {
+                row_width = row.childElementCount;
+
+                if (row_width < width) {
+                    row.insertCell();
+                } else if (row_width > width) {
+                    row.deleteCell(-1);
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    function loadTable(inputData) {
+        let data;
+        /* Handle invalid data given to us */
+        try {
+            data = JSON.parse(inputData);
+        } catch (e) {
+            // This is one way database errors are reported...
+            console.error(inputData);
+            return;
+        }
+
+        /* Handle empty data given to us */
+        if (data.length === 0) {
+            resizeTable(0, 0);
+            msgUser('No results');
+            return;
+        }
+
+        resizeTable(data[0].length, data.length);
+
+        let tbl = document.getElementById('output_table');
+        let tbody = tbl.children[1];
+
+        let cve_col = current_columns.indexOf('cve_id');
+
+        /* Populate data in an NxM fashion */
+        for (let i=0; i<data.length; i++) {
+            let row = tbody.children[i];
+
+            for (let j=0; j<data[i].length; j++) {
+                let cell = row.children[j];
+
+                if (j === cve_col) {
+                    let a = cell.getElementsByTagName('a')[0];
+                    if (!a) { a = document.createElement('a'); }
+
+                    a['href'] = getCVELink(data[i][j]);
+                    a['text'] = data[i][j];
+                    cell.appendChild(a);
+                } else {
+                    cell.textContent = data[i][j];
+                }
+            }
+        }
+    }
+
+    /* This function only runs on page load and assumes the table is empty */
+    function createHeader() {
+        let tbl = document.getElementById('output_table');
+        let header = tbl.children[0];
+
+        let headerRow = document.createElement('tr');
+
+        for (let i=0; i<current_columns.length; i++) {
+            let th = document.createElement('th')
+            th.textContent = getDisplayName(current_columns[i]);
+
+            headerRow.appendChild(th);
+        }
+
+        header.appendChild(headerRow);
+    }
+
+    function pageInit() {
+        createHeader();
+        populateData();
+    }
+
+    window.onload = pageInit;
+</script>
+
+{%- endblock -%}

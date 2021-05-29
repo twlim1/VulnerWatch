@@ -36,6 +36,8 @@ IMPORTDIR=""
 STOPCONT=""
 STARTCONT=""
 DELETECONT=""
+RUNCONT=""
+BUILDCONT=""
 
 ###############################################################################
 # Functions
@@ -102,6 +104,14 @@ getargs() {
                 fatal "'import' argument requires a directory to import from."
             fi
             ;;
+
+        # Hidden options. They can be added to the usage if the difference
+        # between "run" and "start" can be adequately explained.
+        #
+        # Docker "run" commands only need to happen after a docker image was
+        # built, then "start" should be used to start a not-running container.
+        "build")  BUILDCONT=$(ext_to_int "$2");;
+        "run")  RUNCONT=$(ext_to_int "$2");;
 
         *) usage; exit 1;;
     esac
@@ -213,6 +223,13 @@ build_dba_container() {
     cd ..
 }
 
+build_container() {
+    case "$1" in
+        "$UI_CONTAINER") build_ui_container;;
+        "$DBA_CONTAINER") build_dba_container;;
+    esac
+}
+
 build_containers() {
     build_ui_container
     build_dba_container
@@ -240,6 +257,14 @@ run_dba_container() {
     # Use the following command if GPU is available:
     # docker run --name "$DBA_CONTAINER" -p 81:81 -d --gpus all -v $DBA_MODELS:/models --net host "$DBA_CONTAINER"
     docker run --name "$DBA_CONTAINER" -p 81:81 -d -v $DBA_MODELS:/models --net host "$DBA_CONTAINER"
+}
+
+run_container() {
+    case "$1" in
+        "$UI_CONTAINER") ui_container_is_running || run_ui_container;;
+        "$DB_CONTAINER") db_container_is_running || run_db_container;;
+        "$DBA_CONTAINER") dba_container_is_running || run_dba_container;;
+    esac
 }
 
 run_containers() {
@@ -366,6 +391,12 @@ main() {
             ;;
         "export")
             export_containers "$EXPORTDIR"
+            ;;
+        "build")
+            build_container "$BUILDCONT"
+            ;;
+        "run")
+            run_container "$RUNCONT"
             ;;
     esac
 }

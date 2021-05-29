@@ -4,9 +4,17 @@
     /* ====================
     Preloader
     ======================= */
-	window.onload = function () {
-		window.setTimeout(fadeout, 300);
-	}
+    if (window.onload) {
+        let save = window.onload;
+        window.onload = function() {
+            save();
+		    window.setTimeout(fadeout, 300);
+        }
+    } else {
+    	window.onload = function () {
+    		window.setTimeout(fadeout, 300);
+    	}
+    }
 
 	function fadeout() {
 		document.querySelector('.preloader').style.opacity = '0';

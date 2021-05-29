@@ -6,4 +6,41 @@
 #inputNotificationZone {
   color: #dd3333;
   font-family: "Fira Sans", sans-serif;
+  font-size: 1.4em;
+}
+
+#explore_main {
+    width: 90%;
+    margin: 0% 5% 0% 3%;
+}
+
+#user_controls {
+    /* helps line up this div with with the table */
+    margin-top: 30px;
+    width: 200px;
+    float: left;
+}
+
+#user_controls select {
+    width: min-content;
+}
+
+#user_controls input {
+    width: min-content;
+    max-width: 100px;
+}
+
+#output_table_div {
+    margin-left: 200px;
+}
+
+#search_div {
+    margin-left: 220px;
+    margin-bottom: 2px;
+    float: right;
+}
+
+/* kludge */
+.shift_right {
+    margin-left: 40%;
 }
