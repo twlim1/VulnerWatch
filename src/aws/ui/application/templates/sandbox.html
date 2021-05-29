@@ -18,9 +18,86 @@
 
     <div style="line-height:200%;"><br></div>
 
-    <div id="sandboxOutput" class="form-group shadow-textarea">
-        <h5><label for="outputTextarea">Output:</label></h5>
-        <p class="form-control z-depth-1" id="outputTextarea" rows="3" readonly></p>
+    <div id="sandboxOutput">
+        <h5>Output:</h5>
+        <div style="line-height:50%;"><br></div>
+
+        <table id="sandbox_output_table">
+            <col style="width:30%">
+            <col style="width:15%">
+            <col style="width:15%">
+            <col style="width:15%">
+            <col style="width:15%">
+
+            <tbody>
+                <tr id="cvss_output">
+                    <td>CVSS:</td>
+                    <td id="cvss_output_cell"></td>
+                </tr>
+
+                <tr id="av_output">
+                    <td>Attack Vector:</td>
+                    <!-- NOTE: bootstrap button classes aren't meant for divs
+                         but we use them for convenience -->
+                    <td><div class="btn btn-outline-danger btn-sm disable_events">Network</div></td>
+                    <td><div class="btn btn-outline-warning btn-sm disable_events">Adj. Network</div></td>
+                    <td><div class="btn btn-outline-success btn-sm disable_events">Local</div></td>
+                    <td><div class="btn btn-outline-info btn-sm disable_events">Physical</div></td>
+                </tr>
+
+                <tr id="ac_output">
+                    <td>Attack Complexity:</td>
+                    <td><div class="btn btn-outline-danger btn-sm disable_events">Low</div></td>
+                    <td><div class="btn btn-outline-warning btn-sm disable_events">High</div></td>
+                </tr>
+
+                <tr id="ui_output">
+                    <td>User Interaction:</td>
+                    <td><div class="btn btn-outline-danger btn-sm disable_events">None</div></td>
+                    <td><div class="btn btn-outline-warning btn-sm disable_events">Required</div></td>
+                </tr>
+
+                <tr id="pr_output">
+                    <td>Privileges Required:</td>
+                    <td><div class="btn btn-outline-danger btn-sm disable_events">None</div></td>
+                    <td><div class="btn btn-outline-warning btn-sm disable_events">Low</div></td>
+                    <td><div class="btn btn-outline-success btn-sm disable_events">High</div></td>
+                </tr>
+
+                <tr id="ci_output">
+                    <td>Confidentiality Impact:</td>
+                    <td><div class="btn btn-outline-danger btn-sm disable_events">High</div></td>
+                    <td><div class="btn btn-outline-warning btn-sm disable_events">Low</div></td>
+                    <td><div class="btn btn-outline-success btn-sm disable_events">None</div></td>
+                </tr>
+
+                <tr id="ii_output">
+                    <td>Integrity Impact:</td>
+                    <td><div class="btn btn-outline-danger btn-sm disable_events">High</div></td>
+                    <td><div class="btn btn-outline-warning btn-sm disable_events">Low</div></td>
+                    <td><div class="btn btn-outline-success btn-sm disable_events">None</div></td>
+                </tr>
+
+                <tr id="ai_output">
+                    <td>Availability Impact:</td>
+                    <td><div class="btn btn-outline-danger btn-sm disable_events">High</div></td>
+                    <td><div class="btn btn-outline-warning btn-sm disable_events">Low</div></td>
+                    <td><div class="btn btn-outline-success btn-sm disable_events">None</div></td>
+                </tr>
+
+                <tr id="sc_output">
+                    <td>Scope:</td>
+                    <td><div class="btn btn-outline-danger btn-sm disable_events">Changed</div></td>
+                    <td><div class="btn btn-outline-warning btn-sm disable_events">Unchanged</div></td>
+                </tr>
+
+                <tr id="conf_output">
+                    <td>Mean Confidence:</td>
+                    <td id="conf_output_cell"></td>
+                </tr>
+
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -70,6 +147,8 @@
             return;
         }
 
+        clearOutput();
+
         makeApiRequest(value);
     }
 
@@ -90,10 +169,11 @@
         req.send(params);
     }
 
+    /* These strings need to match those in the output table... */
     function convertOutput(data, key) {
         if (key === 'pred_av') {
                  if (data[key] === 0) { return 'Network'; }
-            else if (data[key] === 1) { return 'Adjacent Network'; }
+            else if (data[key] === 1) { return 'Adj. Network'; }
             else if (data[key] === 2) { return 'Local'; }
             else if (data[key] === 3) { return 'Physical'; }
             else { return 'Unknown'; }
@@ -124,9 +204,79 @@
         }
     }
 
-    /* Update text box */
-    function showResponse(text) {
-        document.getElementById('outputTextarea').innerHTML = text;
+    function clearOutput() {
+        let tbl = document.getElementById('sandbox_output_table');
+        let tbody = tbl.getElementsByTagName('tbody')[0];
+        let i = 0;
+
+        for (let tr of tbody.getElementsByTagName('tr')) {
+            /* CVSS row */
+            if (i == 0) {
+                updateCVSSRow('');
+
+            /* Confidence row */
+            } else if (i == 9) {
+                updateConfRow('');
+
+            /* 8 metric rows */
+            } else {
+                let j = 0;
+                for (let div of tr.getElementsByTagName('div')) {
+                    if (j === 0) {
+                        div.classList.add('btn-outline-danger');
+                        div.classList.remove('btn-danger');
+                    } else if (j === 1) {
+                        div.classList.add('btn-outline-warning');
+                        div.classList.remove('btn-warning');
+                    } else if (j === 2) {
+                        div.classList.add('btn-outline-success');
+                        div.classList.remove('btn-success');
+                    } else if (j === 3) {
+                        div.classList.add('btn-outline-info');
+                        div.classList.remove('btn-info');
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+    }
+
+    /* Update 1 cell in the output table */
+    function updateOutputRow(row_id, data, key) {
+        let displayname = convertOutput(data, key);
+        let ele = document.getElementById(row_id);
+        let i = 0;
+
+        for (let cell of ele.getElementsByTagName('div')) {
+            if (cell.textContent === displayname) {
+                if (i === 0) {
+                    cell.classList.remove('btn-outline-danger');
+                    cell.classList.add('btn-danger');
+                } else if (i === 1) {
+                    cell.classList.remove('btn-outline-warning');
+                    cell.classList.add('btn-warning');
+                } else if (i === 2) {
+                    cell.classList.remove('btn-outline-success');
+                    cell.classList.add('btn-success');
+                } else {
+                    cell.classList.remove('btn-outline-info');
+                    cell.classList.add('btn-info');
+                }
+                break;
+            }
+            i++;
+        }
+    }
+
+    function updateCVSSRow(data) {
+        let cell = document.getElementById('cvss_output_cell');
+        cell.innerHTML = '<strong>' + data + '</strong>';
+    }
+
+    function updateConfRow(data) {
+        let cell = document.getElementById('conf_output_cell');
+        cell.innerHTML = '<strong>' + data + '</strong>';
     }
 
     function processResponse(text) {
@@ -135,24 +285,21 @@
             output = JSON.parse(text);
         }
         catch (e) {
-            showResponse('Could not parse:<br>' + text);
+            msgUser('Internal Error');
+            console.error('Could not parse:\n' + text);
             return;
         }
 
-        let disp_html = '<strong>CVSS Base Score:</strong> ' + output['score_b'] + '<br><br>';
-
-        disp_html += '<strong>Attack Vector:</strong> '         + convertOutput(output, 'pred_av') + '<br>';
-        disp_html += '<strong>Attack Complexity:</strong> '     + convertOutput(output, 'pred_ac') + '<br>';
-        disp_html += '<strong>Privileges Required:</strong> '   + convertOutput(output, 'pred_pr') + '<br>';
-        disp_html += '<strong>User Interaction:</strong> '      + convertOutput(output, 'pred_ui') + '<br>';
-        disp_html += '<strong>Scope:</strong> '                 + convertOutput(output, 'pred_sc') + '<br>';
-        disp_html += '<strong>Confidentiality Impact:</strong> '+ convertOutput(output, 'pred_ci') + '<br>';
-        disp_html += '<strong>Integrity Impact:</strong> '      + convertOutput(output, 'pred_ii') + '<br>';
-        disp_html += '<strong>Availablity Impact:</strong> '    + convertOutput(output, 'pred_ai') + '<br><br>';
-
-        disp_html += '<strong>Mean Confidence:</strong> ' + Number(output['mean_conf']).toFixed(2) + '<br>';
-
-        showResponse(disp_html);
+        updateCVSSRow(output['score_b']);
+        updateOutputRow('av_output', output, 'pred_av');
+        updateOutputRow('ac_output', output, 'pred_ac');
+        updateOutputRow('pr_output', output, 'pred_pr');
+        updateOutputRow('ui_output', output, 'pred_ui');
+        updateOutputRow('sc_output', output, 'pred_sc');
+        updateOutputRow('ci_output', output, 'pred_ci');
+        updateOutputRow('ii_output', output, 'pred_ii');
+        updateOutputRow('ai_output', output, 'pred_ai');
+        updateConfRow(Number(output['mean_conf']).toFixed(2));
     }
 </script>
 
