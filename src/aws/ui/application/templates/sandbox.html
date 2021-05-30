@@ -39,56 +39,56 @@
                     <td>Attack Vector:</td>
                     <!-- NOTE: bootstrap button classes aren't meant for divs
                          but we use them for convenience -->
-                    <td><div class="btn btn-outline-danger btn-sm disable_events">Network</div></td>
-                    <td><div class="btn btn-outline-warning btn-sm disable_events">Adj. Network</div></td>
-                    <td><div class="btn btn-outline-success btn-sm disable_events">Local</div></td>
-                    <td><div class="btn btn-outline-info btn-sm disable_events">Physical</div></td>
+                    <td><div title="A vulnerability exploitable with Network access means the vulnerable component is bound to the network stack and the attacker's path is through OSI layer 3 (the network layer). Such a vulnerability is often termed 'remotely exploitable' and can be thought of as an attack being exploitable one or more network hops away (e.g. across layer 3 boundaries from routers)." class="btn btn-outline-danger btn-sm">Network</div></td>
+                    <td><div title="A vulnerability exploitable with Adjacent Network access means the vulnerable component is bound to the network stack, however the attack is limited to the same shared physical (e.g. Bluetooth, IEEE 802.11), or logical (e.g. local IP subnet) network, and cannot be performed across an OSI layer 3 boundary (e.g. a router)." class="btn btn-outline-warning btn-sm warning_text">Adj. Network</div></td>
+                    <td><div title="A vulnerability exploitable with Local access means that the vulnerable component is not bound to the network stack, and the attacker's path is via read/write/execute capabilities. In some cases, the attacker may be logged in locally in order to exploit the vulnerability, or may rely on User Interaction to execute a malicious file." class="btn btn-outline-success btn-sm">Local</div></td>
+                    <td><div title="A vulnerability exploitable with Physical access requires the attacker to physically touch or manipulate the vulnerable component, such as attaching an peripheral device to a system." class="btn btn-outline-info btn-sm">Physical</div></td>
                 </tr>
 
                 <tr id="ac_output">
                     <td>Attack Complexity:</td>
-                    <td><div class="btn btn-outline-danger btn-sm disable_events">Low</div></td>
-                    <td><div class="btn btn-outline-warning btn-sm disable_events">High</div></td>
+                    <td><div title="Specialized access conditions or extenuating circumstances do not exist. An attacker can expect repeatable success against the vulnerable component." class="btn btn-outline-danger btn-sm">Low</div></td>
+                    <td><div title="A successful attack depends on conditions beyond the attacker's control. That is, a successful attack cannot be accomplished at will, but requires the attacker to invest in some measurable amount of effort in preparation or execution against the vulnerable component before a successful attack can be expected." class="btn btn-outline-warning btn-sm warning_text">High</div></td>
                 </tr>
 
                 <tr id="ui_output">
                     <td>User Interaction:</td>
-                    <td><div class="btn btn-outline-danger btn-sm disable_events">None</div></td>
-                    <td><div class="btn btn-outline-warning btn-sm disable_events">Required</div></td>
+                    <td><div title="The vulnerable system can be exploited without interaction from any user." class="btn btn-outline-danger btn-sm">None</div></td>
+                    <td><div title="Successful exploitation of this vulnerability requires a user to take some action before the vulnerability can be exploited, such as convincing a user to click a link in an email." class="btn btn-outline-warning btn-sm warning_text">Required</div></td>
                 </tr>
 
                 <tr id="pr_output">
                     <td>Privileges Required:</td>
-                    <td><div class="btn btn-outline-danger btn-sm disable_events">None</div></td>
-                    <td><div class="btn btn-outline-warning btn-sm disable_events">Low</div></td>
-                    <td><div class="btn btn-outline-success btn-sm disable_events">High</div></td>
+                    <td><div title="The attacker is unauthorized prior to attack, and therefore does not require any access to settings or files to carry out an attack." class="btn btn-outline-danger btn-sm">None</div></td>
+                    <td><div title="The attacker is authorized with (i.e. requires) privileges that provide basic user capabilities that could normally affect only settings and files owned by a user. Alternatively, an attacker with Low privileges may have the ability to cause an impact only to non-sensitive resources." class="btn btn-outline-warning btn-sm warning_text">Low</div></td>
+                    <td><div title="The attacker is authorized with (i.e. requires) privileges that provide significant (e.g. administrative) control over the vulnerable component that could affect component-wide settings and files." class="btn btn-outline-success btn-sm">High</div></td>
                 </tr>
 
                 <tr id="ci_output">
                     <td>Confidentiality Impact:</td>
-                    <td><div class="btn btn-outline-danger btn-sm disable_events">High</div></td>
-                    <td><div class="btn btn-outline-warning btn-sm disable_events">Low</div></td>
-                    <td><div class="btn btn-outline-success btn-sm disable_events">None</div></td>
+                    <td><div title="There is total loss of confidentiality, resulting in all resources within the impacted component being divulged to the attacker. Alternatively, access to only some restricted information is obtained, but the disclosed information presents a direct, serious impact." class="btn btn-outline-danger btn-sm">High</div></td>
+                    <td><div title="There is some loss of confidentiality. Access to some restricted information is obtained, but the attacker does not have control over what information is obtained, or the amount or kind of loss is constrained. The information disclosure does not cause a direct, serious loss to the impacted component." class="btn btn-outline-warning btn-sm warning_text">Low</div></td>
+                    <td><div title="There is no loss of confidentiality within the impacted component." class="btn btn-outline-success btn-sm">None</div></td>
                 </tr>
 
                 <tr id="ii_output">
                     <td>Integrity Impact:</td>
-                    <td><div class="btn btn-outline-danger btn-sm disable_events">High</div></td>
-                    <td><div class="btn btn-outline-warning btn-sm disable_events">Low</div></td>
-                    <td><div class="btn btn-outline-success btn-sm disable_events">None</div></td>
+                    <td><div title="There is a total loss of integrity, or a complete loss of protection. For example, the attacker is able to modify any/all files protected by the impacted component. Alternatively, only some files can be modified, but malicious modification would present a direct, serious consequence to the impacted component." class="btn btn-outline-danger btn-sm">High</div></td>
+                    <td><div title="Modification of data is possible, but the attacker does not have control over the consequence of a modification, or the amount of modification is constrained. The data modification does not have a direct, serious impact on the impacted component." class="btn btn-outline-warning btn-sm warning_text">Low</div></td>
+                    <td><div title="There is no loss of integrity within the impacted component." class="btn btn-outline-success btn-sm">None</div></td>
                 </tr>
 
                 <tr id="ai_output">
                     <td>Availability Impact:</td>
-                    <td><div class="btn btn-outline-danger btn-sm disable_events">High</div></td>
-                    <td><div class="btn btn-outline-warning btn-sm disable_events">Low</div></td>
-                    <td><div class="btn btn-outline-success btn-sm disable_events">None</div></td>
+                    <td><div title="There is total loss of availability, resulting in the attacker being able to fully deny access to resources in the impacted component; this loss is either sustained (while the attacker continues to deliver the attack) or persistent (the condition persists even after the attack has completed). Alternatively, the attacker has the ability to deny some availability, but the loss of availability presents a direct, serious consequence to the impacted component (e.g., the attacker cannot disrupt existing connections, but can prevent new connections; the attacker can repeatedly exploit a vulnerability that, in each instance of a successful attack, leaks a only small amount of memory, but after repeated exploitation causes a service to become completely unavailable)." class="btn btn-outline-danger btn-sm">High</div></td>
+                    <td><div title="There is reduced performance or interruptions in resource availability. Even if repeated exploitation of the vulnerability is possible, the attacker does not have the ability to completely deny service to legitimate users. The resources in the impacted component are either partially available all of the time, or fully available only some of the time, but overall there is no direct, serious consequence to the impacted component." class="btn btn-outline-warning btn-sm warning_text">Low</div></td>
+                    <td><div title="There is no impact to availability within the impacted component." class="btn btn-outline-success btn-sm">None</div></td>
                 </tr>
 
                 <tr id="sc_output">
                     <td>Scope:</td>
-                    <td><div class="btn btn-outline-danger btn-sm disable_events">Changed</div></td>
-                    <td><div class="btn btn-outline-warning btn-sm disable_events">Unchanged</div></td>
+                    <td><div title="An exploited vulnerability can affect resources beyond the authorization privileges intended by the vulnerable component. In this case the vulnerable component and the impacted component are different." class="btn btn-outline-danger btn-sm">Changed</div></td>
+                    <td><div title="An exploited vulnerability can only affect resources managed by the same authority. In this case the vulnerable component and the impacted component are the same." class="btn btn-outline-warning btn-sm warning_text">Unchanged</div></td>
                 </tr>
 
                 <tr id="conf_output">
@@ -223,17 +223,18 @@
                 let j = 0;
                 for (let div of tr.getElementsByTagName('div')) {
                     if (j === 0) {
-                        div.classList.add('btn-outline-danger');
                         div.classList.remove('btn-danger');
+                        div.classList.add('btn-outline-danger');
                     } else if (j === 1) {
-                        div.classList.add('btn-outline-warning');
                         div.classList.remove('btn-warning');
+                        div.classList.add('btn-outline-warning');
+                        div.classList.add('warning_text');
                     } else if (j === 2) {
-                        div.classList.add('btn-outline-success');
                         div.classList.remove('btn-success');
+                        div.classList.add('btn-outline-success');
                     } else if (j === 3) {
-                        div.classList.add('btn-outline-info');
                         div.classList.remove('btn-info');
+                        div.classList.add('btn-outline-info');
                     }
                     j++;
                 }
@@ -254,6 +255,7 @@
                     cell.classList.remove('btn-outline-danger');
                     cell.classList.add('btn-danger');
                 } else if (i === 1) {
+                    cell.classList.remove('warning_text');
                     cell.classList.remove('btn-outline-warning');
                     cell.classList.add('btn-warning');
                 } else if (i === 2) {
