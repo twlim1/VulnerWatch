@@ -119,9 +119,15 @@ def cves():
     search = inputJson.get('search', '').replace(' ', '%')
     search = f"'%{search}%'"
 
+    #
+    # Model filter options
+    #
+    include_manual = inputJson.get('include_manual', True)
+    include_modeled = inputJson.get('include_modeled', True)
+
     # Hit the database
     try:
-        results = cve_query(cols, size, order_by, order_dir, offset, search)
+        results = cve_query(cols, size, order_by, order_dir, offset, search, include_manual, include_modeled)
     except Exception as e:
         return repr(e)
 
@@ -131,7 +137,7 @@ def cves():
 # INTERNAL APIS
 #
 
-def cve_query(columns, num_results, order_by, order_dir, offset, search):
+def cve_query(columns, num_results, order_by, order_dir, offset, search, include_manual, include_modeled):
     #
     # Columns: First, make cve_id column unambiguous for the SELECT
     #
@@ -178,19 +184,30 @@ def cve_query(columns, num_results, order_by, order_dir, offset, search):
         search_str = ''
     else:
         search_str = f'''
-            AND
-            (
+            AND (
                 CVEs.cve_id LIKE {search} 
                 OR
                 description LIKE {search} 
             )
         '''
 
+    if include_manual     and include_modeled:
+        include_str = ''
+    elif not include_manual and include_modeled:
+        include_str = f"AND model <> 'manual'"
+    elif include_manual     and not include_modeled:
+        include_str = f"AND model = 'manual'"
+    else:
+        include_str = ''
+        # honor user's request for no results
+        num_results = 0
+
     query = f'''
         SELECT {column_str}
         FROM CVEs, Scores
         WHERE CVEs.cve_id = Scores.cve_id
         {search_str}
+        {include_str}
         {order_by_str}
         LIMIT {num_results} OFFSET {offset}
     '''

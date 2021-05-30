@@ -17,8 +17,8 @@
     <label for="page_num">Results Page #:</label>
     <input type="number" id="page_num" min="1" max="1000" value="1" onchange="populateData()">
 
-    <br/>
-    <br/>
+    <br>
+    <br>
 
     <label for="output_size_select">Results per Page:</label>
     <select id="output_size_select" class="form-select" onchange="resetPageNum();populateData()">
@@ -27,7 +27,7 @@
         <option>50</option>
     </select>
 
-    <br/>
+    <br>
 
     <label for="order_by_select">Order By:</label>
     <select id="order_by_select" class="form-select" onchange="resetPageNum();populateData()">
@@ -40,6 +40,13 @@
         <option selected>Descending</option>
         <option>Ascending</option>
     </select>
+
+    <br>
+
+    <label for="include_manual">Include Manual Scores:</label>
+    <input type="checkbox" id="include_manual" checked onchange="resetPageNum();populateData()">
+    <label for="include_modeled">Include Modeled Scores:</label>
+    <input type="checkbox" id="include_modeled" checked onchange="resetPageNum();populateData()">
 </div>
 
 {# Main table #}
@@ -154,6 +161,14 @@
         return (page_num - 1) * size;
     }
 
+    function getIncludeManual() {
+        return document.getElementById('include_manual').checked;
+    }
+
+    function getIncludeModeled() {
+        return document.getElementById('include_modeled').checked;
+    }
+
     function resetPageNum() {
         let ele = document.getElementById("page_num");
         ele.value = default_page_num;
@@ -185,6 +200,8 @@
         queryinfo.order_dir = getOrderDirection();
         queryinfo.offset = getOffset();
         queryinfo.search = getSearchText();
+        queryinfo.include_manual = getIncludeManual();
+        queryinfo.include_modeled = getIncludeModeled();
 
         makeCVERequest(JSON.stringify(queryinfo));
     }
