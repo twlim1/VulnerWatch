@@ -129,7 +129,7 @@ verify_es() {
 # Gets all the user input we'll need
 get_input() {
     if [[ "$MODE" == "fresh" ]] || [[ "$MODE" == "import" ]]; then
-        read -r -p "Enter desired postgres password (leave blank to use defualt): " -s DBPW
+        read -r -p "Enter desired postgres password (leave blank to use default): " -s DBPW
         echo
         if [[ $DBPW == "" ]]; then
             DBPW="$DBPW_DEFUALT"
