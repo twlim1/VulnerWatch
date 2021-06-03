@@ -7,6 +7,8 @@ RUN zypper update -y && \
 		      postgresql12 postgresql12-server postgresql12-server-devel \
 		      gcc
 
+RUN pip install --no-cache-dir --upgrade pip wheel setuptools
+
 # Misc config
 RUN mkdir /models
 RUN mkdir /dba_scripts
@@ -20,8 +22,8 @@ COPY application /application
 
 # Install dependencies
 RUN cd /application && \
-    pip install -r ./requirements.txt
+    pip install  --no-cache-dir -r ./requirements.txt
 RUN cd /dba_scripts && \
-    pip install -r ./requirements.txt
+    pip install --no-cache-dir -r ./requirements.txt
 
 CMD ["/bin/bash", "/dba_scripts/dba.sh"]

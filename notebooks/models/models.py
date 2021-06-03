@@ -368,8 +368,10 @@ class CVSSMetric():
         model = BertForSequenceClassification.from_pretrained(
             model_str,
             num_labels = num_labels, # The number of output labels
-            output_attentions = False, # Whether the model returns attentions weights.
-            output_hidden_states = False, # Whether the model returns all hidden-states.
+            output_attentions = True, # Whether the model returns attentions weights.
+            output_hidden_states = True, # Whether the model returns all hidden-states.
+            return_dict_in_generate = True, # Whether or not to return a ModelOutput instead of a plain tuple.
+            output_scores = True, # Whether or not to return the prediction scores. See scores under returned tensors for more details.
         )
 
         # Tell pytorch to run this model on the GPU, if needed.
@@ -714,4 +716,3 @@ if __name__ == '__main__':
     a = CVSSMetric(column, train_data, test_data)
 
     a.train(max_length=256)
-

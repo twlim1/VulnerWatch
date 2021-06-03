@@ -17,7 +17,8 @@ DB_VOLUME="postgres_volume"
 DB_MOUNT_LOC="/var/lib/postgresql/data" # directory within container
 
 # Models path to be mounted inside dba container
-DBA_MODELS="/home/ec2-user/260_capstone/models"
+DBA_MODELS_DEFUALT="/home/ec2-user/260_capstone/models"
+DBA_MODELS=""
 
 UI_ARCHIVE="ui.tar.gz"
 #DB_ARCHIVE="db.tar.gz"
@@ -25,6 +26,7 @@ DB_ARCHIVE="db.sql.gz"
 DBA_ARCHIVE="dba.tar.gz"
 
 # User may be asked to fill these out when running the script.
+DBPW_DEFUALT="vulnerwatch"
 DBPW=""
 DOCKERCLEAR=""
 
@@ -128,7 +130,18 @@ verify_es() {
 # Gets all the user input we'll need
 get_input() {
     if [[ "$MODE" == "fresh" ]] || [[ "$MODE" == "import" ]]; then
-        read -p "Enter desired postgres password: " -s DBPW
+        read -r -p "Enter desired postgres password (leave blank to use default): " -s DBPW
+        echo
+        if [[ $DBPW == "" ]]; then
+            DBPW="$DBPW_DEFUALT"
+        fi
+
+        read -r -p "Enter absolute path to models folder (leave blank to use default): " DBA_MODELS
+        echo
+        if [[ $DBA_MODELS == "" ]]; then
+            DBA_MODELS="$DBA_MODELS_DEFUALT"
+        fi
+        echo "set modles folder to: $DBA_MODELS"
         echo
     fi
 }
@@ -147,7 +160,7 @@ start_services() {
 clear_entities() {
     docker container stop "$1" 2>/dev/null
     docker container rm "$1"
-    docker rmi "$1"
+    # docker rmi "$1" # Do not delete the image to reduce build time
 }
 
 clear_out_docker() {

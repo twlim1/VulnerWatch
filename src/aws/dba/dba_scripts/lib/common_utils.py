@@ -6,6 +6,7 @@ import textwrap
 
 from transformers import BertForSequenceClassification, BertTokenizer
 
+from lib.extract_relevant_vocab import VocabRelevance
 
 class BaseScore:
     @staticmethod
@@ -147,10 +148,67 @@ class CVSS:
         self.ac_tokenizer, self.ac_model = self.load_model(ac_path)
         self.pr_tokenizer, self.pr_model = self.load_model(pr_path)
         self.ui_tokenizer, self.ui_model = self.load_model(ui_path)
-        self.sc_tokenizer, self.si_model = self.load_model(sc_path)
+        self.sc_tokenizer, self.sc_model = self.load_model(sc_path)
         self.ci_tokenizer, self.ci_model = self.load_model(ci_path)
         self.ii_tokenizer, self.ii_model = self.load_model(ii_path)
         self.ai_tokenizer, self.ai_model = self.load_model(ai_path)
+
+        self.av_vocab_rel = VocabRelevance(
+            model_folder=av_path, 
+            num_labels=get_label_size('AV'), 
+            model=self.av_model,
+            tokenizer=self.av_tokenizer,
+            device=self.device)
+
+        self.ac_vocab_rel = VocabRelevance(
+            model_folder=ac_path, 
+            num_labels=get_label_size('AC'), 
+            model=self.ac_model,
+            tokenizer=self.ac_tokenizer,
+            device=self.device)
+
+        self.pr_vocab_rel = VocabRelevance(
+            model_folder=pr_path, 
+            num_labels=get_label_size('PR'), 
+            model=self.pr_model,
+            tokenizer=self.pr_tokenizer,
+            device=self.device)
+
+        self.ui_vocab_rel = VocabRelevance(
+            model_folder=ui_path, 
+            num_labels=get_label_size('UI'), 
+            model=self.ui_model,
+            tokenizer=self.ui_tokenizer,
+            device=self.device)
+
+        self.sc_vocab_rel = VocabRelevance(
+            model_folder=sc_path, 
+            num_labels=get_label_size('SC'), 
+            model=self.sc_model,
+            tokenizer=self.sc_tokenizer,
+            device=self.device)
+
+        self.ci_vocab_rel = VocabRelevance(
+            model_folder=ci_path, 
+            num_labels=get_label_size('CI'), 
+            model=self.ci_model,
+            tokenizer=self.ci_tokenizer,
+            device=self.device)
+
+        self.ii_vocab_rel = VocabRelevance(
+            model_folder=ii_path, 
+            num_labels=get_label_size('II'), 
+            model=self.ii_model,
+            tokenizer=self.ii_tokenizer,
+            device=self.device)
+
+        self.ai_vocab_rel = VocabRelevance(
+            model_folder=ai_path, 
+            num_labels=get_label_size('AI'), 
+            model=self.ai_model,
+            tokenizer=self.ai_tokenizer,
+            device=self.device)
+
 
     @staticmethod
     def get_device(use_gpu):
@@ -167,7 +225,7 @@ class CVSS:
         return device
 
     def load_model(self, model_path):
-        token = BertTokenizer.from_pretrained(model_path)
+        token = BertTokenizer.from_pretrained(model_path, do_lower_case=True)
         model = BertForSequenceClassification.from_pretrained(model_path, output_hidden_states=True)
         model.to(self.device)
         return token, model
@@ -244,7 +302,7 @@ class CVSS:
         self.print_custom('  UI: {}\t\tConfidence: {:.4f}'.format(integer_to_value('UI', pred_ui).capitalize(),
                                                                   conf_ui))
 
-        logits, vec = self.text_to_embedding(self.sc_tokenizer, self.si_model, 512, text)
+        logits, vec = self.text_to_embedding(self.sc_tokenizer, self.sc_model, 512, text)
         pred_sc = np.argmax(logits, axis=1)[0]
         conf_sc = self.logits_2_confidence(np.max(logits[0]))
         self.print_custom('  SC: {}\t\tConfidence: {:.4f}'.format(integer_to_value('SC', pred_sc).capitalize(),
@@ -275,10 +333,27 @@ class CVSS:
         self.print_custom('  Impact score: {}'.format(pred_i))
         self.print_custom('  Exploitability score: {}'.format(pred_e))
 
-        return (pred_b, pred_i, pred_e), \
-               (pred_av, pred_ac, pred_pr, pred_ui, pred_sc, pred_ci, pred_ii, pred_ai), \
-               (conf_av, conf_ac, conf_pr, conf_ui, conf_sc, conf_ci, conf_ii, conf_ai)
+        word_av = self.get_relevant_words(self.av_vocab_rel, str(text).lower(), pred_av)
+        word_ac = self.get_relevant_words(self.ac_vocab_rel, str(text).lower(), pred_ac)
+        word_pr = self.get_relevant_words(self.pr_vocab_rel, str(text).lower(), pred_pr)
+        word_ui = self.get_relevant_words(self.ui_vocab_rel, str(text).lower(), pred_ui)
+        word_sc = self.get_relevant_words(self.sc_vocab_rel, str(text).lower(), pred_sc)
+        word_ci = self.get_relevant_words(self.ci_vocab_rel, str(text).lower(), pred_ci)
+        word_ii = self.get_relevant_words(self.ii_vocab_rel, str(text).lower(), pred_ii)
+        word_ai = self.get_relevant_words(self.ai_vocab_rel, str(text).lower(), pred_ai)
 
+        return ((pred_b, pred_i, pred_e),
+               (pred_av, pred_ac, pred_pr, pred_ui, pred_sc, pred_ci, pred_ii, pred_ai),
+               (conf_av, conf_ac, conf_pr, conf_ui, conf_sc, conf_ci, conf_ii, conf_ai),
+               (word_av, word_ac, word_pr, word_ui, word_sc, word_ci, word_ii, word_ai))
+
+    @staticmethod
+    def get_relevant_words(vocab_obj, text, label=0):
+        test_sentence = vocab_obj.prep_sentence(text, label)
+        analysis_dict = vocab_obj.analysis_task(test_sentence)
+        attribution_meta = vocab_obj.load_attribution_meta(analysis_dict)
+        relevant_words = vocab_obj.report_for_gui(attribution_meta)
+        return relevant_words
 
 def value_to_integer(metric, value):
     metric = metric.lower()
@@ -351,3 +426,17 @@ def integer_to_value(metric, integer):
         elif integer == 2:
             return 'high'
     raise ValueError('Invalid metric: {} value: {}'.format(metric, integer))
+
+def get_label_size(metric):
+    metric = metric.lower()
+    if metric == 'av':
+        return 4
+    elif metric in ('pr', 'ci', 'ii', 'ai'):
+        return 3
+    elif metric in ('ac', 'ui', 'sc'):
+        return 2
+    else:
+        raise ValueError('Invalid metric: {}'.format(metric))
+
+if __name__ == '__main__':
+    pass
