@@ -26,4 +26,7 @@ RUN cd /application && \
 RUN cd /dba_scripts && \
     pip install --no-cache-dir -r ./requirements.txt
 
-CMD ["/bin/bash", "/dba_scripts/dba.sh"]
+ENV FLASK_APP=/application/DBAapp.py
+ENV PYTHONPATH="$PYTHONPATH:/dba_scripts"
+WORKDIR /application
+# CMD ["/bin/bash", "/dba_scripts/dba.sh"]

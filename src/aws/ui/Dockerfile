@@ -9,6 +9,9 @@ RUN zypper update -y && \
 RUN mkdir /application
 RUN echo 'set -o vi' >> /root/.bashrc
 RUN ln -s /usr/bin/python3 /usr/bin/python
+ENV FLASK_APP=/application/nlp260app.py
+
+RUN pip install --no-cache-dir --upgrade pip wheel setuptools
 
 # Copy local files
 COPY application /application
@@ -20,4 +23,5 @@ RUN cd /application && \
 # Misc config
 RUN echo 'set -o vi' >> /root/.bashrc
 
-CMD ["/bin/bash", "/application/run.sh"]
+WORKDIR /application
+# CMD ["/bin/bash", "/application/run.sh"]
