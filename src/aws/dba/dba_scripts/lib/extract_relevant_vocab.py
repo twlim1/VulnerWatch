@@ -23,7 +23,6 @@ from torch.utils.data import DataLoader, TensorDataset
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data.sampler import RandomSampler, SequentialSampler
 
-from tqdm import tqdm, trange
 # this imports most of the helpers needed to eval the model
 
 from transformers import BertModel, BertConfig
@@ -33,11 +32,11 @@ from transformers import AdamW
 import torch.nn as nn
 import math
 
-import logging
-logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s', 
-                    datefmt = '%m/%d/%Y %H:%M:%S',
-                    level = logging.INFO)
-logger = logging.getLogger('Logger')
+# import logging
+# logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s', 
+#                     datefmt = '%m/%d/%Y %H:%M:%S',
+#                     level = logging.INFO)
+# logger = logging.getLogger('Logger')
 
 
 #@title Data containers
@@ -230,11 +229,11 @@ class VocabRelevance:
             if torch.cuda.is_available():    
                 # Tell PyTorch to use the GPU.    
                 self.device = torch.device('cuda')
-                print('There are %d GPU(s) available.' % torch.cuda.device_count())
-                print('We will use the GPU:', torch.cuda.get_device_name(0))
+                # print('There are %d GPU(s) available.' % torch.cuda.device_count())
+                # print('We will use the GPU:', torch.cuda.get_device_name(0))
             # If not...
             else:
-                print('No GPU available, using the CPU instead.')
+                # print('No GPU available, using the CPU instead.')
                 self.device = torch.device('cpu')
         else:
             self.device = device
@@ -260,7 +259,7 @@ class VocabRelevance:
     def convert_examples_to_features(examples, max_seq_length, tokenizer):
         """Loads a data file into a list of `InputBatch`s."""
         features = []
-        for (ex_index, example) in enumerate(tqdm(examples)):
+        for (ex_index, example) in enumerate(examples):
             tokens_a = tokenizer.tokenize(example.text_a)
 
             tokens_b = None
@@ -463,11 +462,11 @@ class VocabRelevance:
         text_a = str(sentence)
         text_b = None
         label = int(str(label))
-        if debug:
-            print("guid=",guid)
-            print("text_a=",text_a)
-            print("text_b=",text_b)
-            print("label=",label)
+        # if debug:
+        #     print("guid=",guid)
+        #     print("text_a=",text_a)
+        #     print("text_b=",text_b)
+        #     print("label=",label)
         
         examples.append(
                 InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
@@ -523,7 +522,7 @@ class VocabRelevance:
         inputs_ids = []
         seqs_lens = []
 
-        for _, batch in enumerate(tqdm(test_dataloader, desc="Iteration")):
+        for _, batch in enumerate(test_dataloader):
             # see https://huggingface.co/transformers/model_doc/bert.html?highlight=attention_mask#transformers.BertModel.forward
             """
             input_ids: Indices of input sequence tokens in the vocabulary.
@@ -614,9 +613,9 @@ class VocabRelevance:
         result = collections.OrderedDict()
         result = {'test_loss': test_loss,
                     str(self.num_labels)+ '-class test_accuracy': test_accuracy}
-        logger.info("***** Eval results *****")
-        for key in result.keys():
-            logger.info("  %s = %s\n", key, str(result[key]))
+        # logger.info("***** Eval results *****")
+        # for key in result.keys():
+        #     logger.info("  %s = %s\n", key, str(result[key]))
         # get predictions needed for evaluation
         pred_logits = np.concatenate(pred_logits, axis=0)
         actual = np.concatenate(actual, axis=0)
@@ -630,7 +629,7 @@ class VocabRelevance:
         # attribution_scores_state_dict["lrp_scores"] = gi_scores # lrp_scores
         attribution_scores_state_dict["lat_scores"] = lat_scores
 
-        logger.info("***** Finish Attribution Backouts *****")
+        # logger.info("***** Finish Attribution Backouts *****")
         return attribution_scores_state_dict
 
     #@title Analysis top function

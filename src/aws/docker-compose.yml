@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+
+  ui_application:
+    build: ui/
+    restart: always
+    network_mode: host
+    environment:
+      FLASK_ENV: development
+    command: gunicorn --workers 4 --bind 0.0.0.0:80 nlp260app:app
+
+  shared_postgres:
+    image: postgres:latest
+    restart: always
+    network_mode: host
+    environment:
+      POSTGRES_PASSWORD: "vulnerwatch"
+    volumes:
+      - ./postgres_volume:/var/lib/postgresql/data
+    depends_on:
+      - ui_application
+  
+  dba:
+    build: dba/
+    restart: always
+    network_mode: host
+    environment:
+      FLASK_ENV: development
+    volumes:
+      - ../../models:/models
+    command: gunicorn --workers 4 --bind 0.0.0.0:81 DBAapp:app
+    depends_on:
+      - shared_postgres
